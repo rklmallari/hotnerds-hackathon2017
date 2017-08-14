@@ -528,6 +528,35 @@ fireBoards.prototype.showURLField = function() {
 	}
 }
 
+fireBoards.prototype.addCourseToLearn = function(courseId) {
+	var coursesRef = this.database.ref('fireCourses/' + courseId).once('value', function(snapshot) {
+		var postData = {
+			category: snapshot.child("category").val(),
+			completionDateTime: 0,
+			courseName: snapshot.child("courseName").val(),
+			myRating: 0,
+			overallRating: snapshot.child("overallRating").val(),
+			popularity: snapshot.child("popularity").val(),
+			status: "In Progress"
+		};
+
+		var coursesRef = firebase.database().ref('userCourses/' + this.auth.currentUser.uid + '/' + courseId).set(postData, snap => {
+            alert('Course was added to your Fireboards list!');
+            var rootRef = firebase.database().ref();
+            var updatePopularity = {};
+
+            updatePopularity['/fireCourses/' + courseId + '/popularity'] = snapshot.child("popularity").val()+1;
+  			updatePopularity['/userCourses/' + this.auth.currentUser.uid + '/' + courseId + '/popularity'] = snapshot.child("popularity").val()+1;
+
+  			var updates = rootRef.update(updates);
+  			console.log("Popularity updated for " + courseId);
+
+         });
+	}).catch(e => {
+		console.error("Firecourses node is having an error. Please try again", e.message());
+	});
+}
+
 fireBoards.prototype.listAdminUsers = function () {
 
 	console.log("listAdminusers");
