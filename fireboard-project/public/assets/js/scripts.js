@@ -112,7 +112,6 @@ fireBoards.prototype.checkSetup = function() {
 
 fireBoards.prototype.homeShow = function() {
 	this.homePage.removeAttribute('hidden');
-		this.homeLink.setAttribute('class', 'active');
 		this.aboutPage.setAttribute('hidden', true);
 		this.aboutLink.removeAttribute('class');
 		this.announcementsPage.setAttribute('hidden', true);
@@ -134,7 +133,6 @@ fireBoards.prototype.homeShow = function() {
 
 fireBoards.prototype.aboutShow = function() {
 	this.aboutPage.removeAttribute('hidden');
-		this.aboutLink.setAttribute('class', 'active');
 		this.homePage.setAttribute('hidden', true);
 		this.homeLink.removeAttribute('class');
 		this.announcementsPage.setAttribute('hidden', true);
@@ -156,7 +154,6 @@ fireBoards.prototype.aboutShow = function() {
 
 fireBoards.prototype.coursesShow = function() {
 	this.coursesPage.removeAttribute('hidden');
-		this.coursesLink.setAttribute('class', 'active');
 		this.aboutPage.setAttribute('hidden', true);
 		this.aboutLink.removeAttribute('class');
 		this.announcementsPage.setAttribute('hidden', true);
@@ -175,7 +172,6 @@ fireBoards.prototype.coursesShow = function() {
 
 fireBoards.prototype.manageShow = function() {
 	this.managePage.removeAttribute('hidden');
-		this.manageLink.setAttribute('class', 'active');
 		this.aboutPage.setAttribute('hidden', true);
 		this.aboutLink.removeAttribute('class');
 		this.reportsPage.setAttribute('hidden', true);
@@ -192,7 +188,6 @@ fireBoards.prototype.manageShow = function() {
 
 fireBoards.prototype.reportsShow = function() {
 	this.reportsPage.removeAttribute('hidden');
-		this.reportsLink.setAttribute('class', 'active');
 		this.aboutPage.setAttribute('hidden', true);
 		this.aboutLink.removeAttribute('class');
 		this.homePage.setAttribute('hidden', true);
@@ -211,7 +206,6 @@ fireBoards.prototype.reportsShow = function() {
 
 fireBoards.prototype.announcementsShow = function() {
 	this.announcementsPage.removeAttribute('hidden');
-		this.announcementsLink.setAttribute('class', 'active');
 		this.aboutPage.setAttribute('hidden', true);
 		this.aboutLink.removeAttribute('class');
 		this.homePage.setAttribute('hidden', true);
@@ -233,7 +227,6 @@ fireBoards.prototype.announcementsShow = function() {
 
 fireBoards.prototype.profileShow = function() {
 	this.profilePage.removeAttribute('hidden');
-		this.profileLink.setAttribute('class', 'active');
 		this.aboutPage.setAttribute('hidden', true);
 		this.aboutLink.removeAttribute('class');
 		this.reportsPage.setAttribute('hidden', true);
@@ -252,7 +245,6 @@ fireBoards.prototype.profileShow = function() {
 
 fireBoards.prototype.myFBShow = function() {
 	this.myFBPage.removeAttribute('hidden');
-		this.myFBLink.setAttribute('class', 'active');
 		this.aboutPage.setAttribute('hidden', true);
 		this.aboutLink.removeAttribute('class');
 		this.reportsPage.setAttribute('hidden', true);
