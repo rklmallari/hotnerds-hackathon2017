@@ -8,6 +8,7 @@ function fireBoards() {
   this.signInList = document.getElementById('signInList');
   this.signOutList = document.getElementById('signOutList');
 
+  //top nav bar links and paged
   this.homeLink = document.getElementById('home');
   this.homePage = document.getElementById('homePage');
   this.aboutLink = document.getElementById('about');
@@ -25,6 +26,14 @@ function fireBoards() {
   this.myFBLink = document.getElementById('myFireboards');
   this.myFBPage = document.getElementById('myFBPage');
 
+  //profile page
+  this.userNameField = document.getElementById('userNameField');
+  this.userEmailField = document.getElementById('userEmailField');
+  this.bioTextArea = document.getElementById('bioTextArea');
+  this.userPic = document.getElementById('userPic');
+  this.updProfButton = document.getElementById('updProfButton');
+
+  //events for nav links
   this.homeLink.addEventListener('click', this.homeShow.bind(this));
   this.aboutLink.addEventListener('click', this.aboutShow.bind(this));
   this.coursesLink.addEventListener('click', this.coursesShow.bind(this));
@@ -34,8 +43,10 @@ function fireBoards() {
   this.profileLink.addEventListener('click', this.profileShow.bind(this));
   this.myFBLink.addEventListener('click', this.myFBShow.bind(this));
 
-  // 
-	
+  //events for profile page
+  this.updProfButton.addEventListener('click', this.updateUser.bind(this));
+
+  //admin page
   this.adminMUAddUserBtn = document.getElementById('adminMUAddUserBtn');
   this.adminMUAddUserBtn.addEventListener('click', this.addAdminUser.bind(this));
   this.readyStateCounter = 0;
@@ -65,6 +76,7 @@ fireBoards.prototype.initFirebase = function () {
 fireBoards.prototype.signOut = function () {
   this.auth.signOut();
   console.info("User logged out.");
+  window.location.reload();
 }
 
 fireBoards.prototype.onAuthStateChanged = function(user) {
@@ -319,6 +331,18 @@ fireBoards.prototype.profileShow = function() {
 		this.myFBLink.removeAttribute('class');
 		this.coursesPage.setAttribute('hidden', true);
 		this.coursesLink.removeAttribute('class');
+
+		this.userNameField.setAttribute('value', this.auth.currentUser.displayName);
+		this.userEmailField.setAttribute('value', this.auth.currentUser.email);
+		this.userPic.setAttribute('src', this.auth.currentUser.photoURL);
+
+		var userRef = this.database.ref('users/' + this.auth.currentUser.uid).once('value', function(snapshot) {
+			bioTextArea.setAttribute('value', snapshot.child("bio").val());
+			adminFlagField.setAttribute('value', snapshot.child("adminFlag").val() ? 'Yes' : 'No');
+		}).catch(e => {
+			console.log("Bio is currently null.");
+		});
+
 }
 
 fireBoards.prototype.myFBShow = function() {
@@ -447,7 +471,7 @@ fireBoards.prototype.upload = function (e) {
 fireBoards.prototype.updateUser = function(user) {
   	if(this.value !== null && this.bio.value !== "") {
 	    var updateUserPost = {
-	      bio : bio.value
+	      bio : this.bioTextArea.value
 	    };
 	    var userRef = this.database.ref('users/' + user.uid);
 	    userRef.update(updateUserPost);
