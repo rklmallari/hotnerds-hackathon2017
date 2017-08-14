@@ -38,6 +38,7 @@ function fireBoards() {
   this.courseDescField = document.getElementById('courseDescField');
   this.categorySel = document.getElementById('categorySel');
   this.courseTypeSel = document.getElementById('courseTypeSel');
+  this.courseVidURL = document.getElementById('courseVidURL');
   this.courseURLVideo = document.getElementById('courseURLVideo');
   this.courseURLFile = document.getElementById('courseURLFile');
   this.uploadForm = document.getElementById('uploadForm');
@@ -407,7 +408,7 @@ fireBoards.prototype.validateAddCourse = function () {
   			reqFields += "Course Type";
   		}
 
-  		if ((this.courseTypeSel.value !== "fileType" && (this.courseURLVideo === null || this.courseURLVideo === "")) ||
+  		if ((this.courseTypeSel.value !== "fileType" && (this.courseVidURL === null || this.courseVidURL === "")) ||
   			(this.courseTypeSel.value !== "videoType" && (this.courseURLFile === null || this.courseURLFile === ""))) {
   			if (reqFields !== "") {
   				reqFields += ", Course URL";
@@ -487,7 +488,7 @@ fireBoards.prototype.addVideo = function() {
 			    courseDescription: courseDescField.value,
 			    courseName: courseNameField.value,
 			    courseType: courseTypeSel.value,
-			    courseURL: courseURLVideo.value,
+			    courseURL: courseVidURL.value,
 			    overallRating: 0,
 			    popularity: 0,
 			    uploadDate: Date.now(),
