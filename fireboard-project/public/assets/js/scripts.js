@@ -408,8 +408,8 @@ fireBoards.prototype.validateAddCourse = function () {
   			reqFields += "Course Type";
   		}
 
-  		if ((this.courseTypeSel.value !== "fileType" && (this.courseVidURL === null || this.courseVidURL === "")) ||
-  			(this.courseTypeSel.value !== "videoType" && (this.courseURLFile === null || this.courseURLFile === ""))) {
+  		if ((this.courseTypeSel.value !== "File" && (this.courseVidURL === null || this.courseVidURL === "")) ||
+  			(this.courseTypeSel.value !== "Video" && (this.courseURLFile === null || this.courseURLFile === ""))) {
   			if (reqFields !== "") {
   				reqFields += ", Course URL";
 	  		} else {
@@ -514,7 +514,7 @@ fireBoards.prototype.updateUser = function(user) {
 }
 
 fireBoards.prototype.showURLField = function() {
-	if(this.courseTypeSel.value !== 'fileType') {
+	if(this.courseTypeSel.value !== 'File') {
 		this.courseURLVideo.removeAttribute('hidden');
 		this.addCourse.removeAttribute('hidden');
 		this.courseURLFile.setAttribute('hidden', 'true');
