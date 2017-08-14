@@ -456,8 +456,27 @@ fireBoards.prototype.updateUser = function(user) {
 	}
 }
 
+fireBoards.prototype.listAdminUsers = function () {
+
+	console.log("listAdminusers");
+
+	firebase.database().ref('/admins/').once('value').then(function (snapshot) {
+		var arr = snapshot.val();
+		var arr2 = Object.keys(arr);
+		var key = arr2[0];
+		//currEmail = document.getElementById('adminMUEmailField').value;
+
+		for (var key in snapshot.val())
+		{
+			console.log(arr[key].email);
+			$('<p>').text(arr[key].email).appendTo($('#listOfAdminUsers'));
+    	}
+    });
+
+}
+
 window.onload = function() {
   window.fireBoards = new fireBoards();
 
-  $('<p>').text('im a new p').appendTo($('#listOfAdminUsers'));
+  fireBoards.listAdminUsers();
 };
