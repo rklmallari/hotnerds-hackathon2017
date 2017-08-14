@@ -20,6 +20,17 @@
 	<script src="assets/js/html5shiv.js"></script>
 	<script src="assets/js/respond.min.js"></script>
 	<![endif]-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+	<script>
+	console.log("Test");
+		$(document).ready(function () {
+			var html = "";
+		    for (i = 0 ; i < 5 ; i++)
+		    	html += "<button>Ein Button</button>";
+		    $("#testdiv").html(html);
+		});
+	</script>
 </head>
 
 <body>
@@ -76,6 +87,9 @@
 					<br />
 						<br />
 					</p>
+
+					<div id="testdiv">
+					</div>
 
 
 					<div class="row">
