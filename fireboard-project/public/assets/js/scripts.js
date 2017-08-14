@@ -8,6 +8,7 @@ function fireBoards() {
   this.signInList = document.getElementById('signInList');
   this.signOutList = document.getElementById('signOutList');
 
+  //top nav bar links and paged
   this.homeLink = document.getElementById('home');
   this.homePage = document.getElementById('homePage');
   this.aboutLink = document.getElementById('about');
@@ -25,6 +26,27 @@ function fireBoards() {
   this.myFBLink = document.getElementById('myFireboards');
   this.myFBPage = document.getElementById('myFBPage');
 
+  //profile page
+  this.userNameField = document.getElementById('userNameField');
+  this.userEmailField = document.getElementById('userEmailField');
+  this.bioTextArea = document.getElementById('bioTextArea');
+  this.userPic = document.getElementById('userPic');
+  this.updProfButton = document.getElementById('updProfButton');
+
+  //manage page
+  this.courseNameField = document.getElementById('courseNameField');
+  this.courseDescField = document.getElementById('courseDescField');
+  this.categorySel = document.getElementById('categorySel');
+  this.courseTypeSel = document.getElementById('courseTypeSel');
+  this.courseVidURL = document.getElementById('courseVidURL');
+  this.courseURLVideo = document.getElementById('courseURLVideo');
+  this.courseURLFile = document.getElementById('courseURLFile');
+  this.uploadForm = document.getElementById('uploadForm');
+  this.uploader = document.getElementById('uploader');
+  this.uploadBox = document.getElementById('uploadBox');
+  this.addCourse = document.getElementById('addCourse');
+
+  //events for nav links
   this.homeLink.addEventListener('click', this.homeShow.bind(this));
   this.aboutLink.addEventListener('click', this.aboutShow.bind(this));
   this.coursesLink.addEventListener('click', this.coursesShow.bind(this));
@@ -34,8 +56,15 @@ function fireBoards() {
   this.profileLink.addEventListener('click', this.profileShow.bind(this));
   this.myFBLink.addEventListener('click', this.myFBShow.bind(this));
 
-  // 
-	
+  //events for profile page
+  this.updProfButton.addEventListener('click', this.updateUser.bind(this));
+
+  //events for manage page
+  this.courseTypeSel.addEventListener('change', this.showURLField.bind(this));
+  this.uploadBox.addEventListener('change', this.uploadFile.bind(this));
+  this.addCourse.addEventListener('click', this.addVideo.bind(this));
+
+  //admin page
   this.adminMUAddUserBtn = document.getElementById('adminMUAddUserBtn');
   this.adminMURemoveUserBtn = document.getElementById('adminMURemoveUserBtn');
 
@@ -67,6 +96,7 @@ fireBoards.prototype.initFirebase = function () {
 fireBoards.prototype.signOut = function () {
   this.auth.signOut();
   console.info("User logged out.");
+  window.location.reload();
 }
 
 fireBoards.prototype.onAuthStateChanged = function(user) {
@@ -350,6 +380,18 @@ fireBoards.prototype.profileShow = function() {
 		this.myFBLink.removeAttribute('class');
 		this.coursesPage.setAttribute('hidden', true);
 		this.coursesLink.removeAttribute('class');
+
+		this.userNameField.setAttribute('value', this.auth.currentUser.displayName);
+		this.userEmailField.setAttribute('value', this.auth.currentUser.email);
+		this.userPic.setAttribute('src', this.auth.currentUser.photoURL);
+
+		var userRef = this.database.ref('users/' + this.auth.currentUser.uid).once('value', function(snapshot) {
+			bioTextArea.setAttribute('value', snapshot.child("bio").val());
+			adminFlagField.setAttribute('value', snapshot.child("adminFlag").val() ? 'Yes' : 'No');
+		}).catch(e => {
+			console.log("Bio is currently null.");
+		});
+
 }
 
 fireBoards.prototype.myFBShow = function() {
@@ -370,35 +412,35 @@ fireBoards.prototype.myFBShow = function() {
 		this.coursesLink.removeAttribute('class');
 }
 
-fireBoards.prototype.upload = function (e) {
-  e.preventDefault();
+fireBoards.prototype.validateAddCourse = function () {
 
   	var reqFields = "";
-  	if(category.value === "" || category.value === null) {
+  	if(this.categorySel.value === "" || this.categorySel.value === null) {
   		reqFields += "Category";
   	}
-  	if(courseDescription.value === "" || courseDescription.value === null) {
+  	if(this.courseDescField.value === "" || this.courseDescField.value === null) {
   		if (reqFields !== "") {
   			reqFields += ", Course Description";
   		} else {
   			reqFields += "Course Description";
   		}
   	}
-  	if(courseName.value === "" || courseName.value === null) {
+  	if(this.courseNameField.value === "" || this.courseNameField.value === null) {
   		if (reqFields !== "") {
-  			reqFields += ", Course Name";
+  			reqFields += ", Course Name/Title";
   		} else {
-  			reqFields += "Course Name";
+  			reqFields += "Course Name/Title";
   		}
   	}
-  	if(courseType.value === "" || courseType.value === null) {
+  	if(this.courseTypeSel.value === "" || this.courseTypeSel.value === null) {
   		if (reqFields !== "") {
   			reqFields += ", Course Type";
   		} else {
   			reqFields += "Course Type";
   		}
 
-  		if (courseType !== "File" && (courseURL === null || courseURL === "")) {
+  		if ((this.courseTypeSel.value !== "File" && (this.courseVidURL === null || this.courseVidURL === "")) ||
+  			(this.courseTypeSel.value !== "Video" && (this.courseURLFile === null || this.courseURLFile === ""))) {
   			if (reqFields !== "") {
   				reqFields += ", Course URL";
 	  		} else {
@@ -407,16 +449,26 @@ fireBoards.prototype.upload = function (e) {
   		}
   	}
 
-  	if(reqFields !== "") {
-      alert("Please populate below required field(s): \n" + reqFields);
-    } else {
+  	console.log(reqFields);
 
-    	if (category.value === "File") {
-    		  var file = e.target.files[0];
+  	if(reqFields !== "") {
+      	alert("Please populate below required field(s): \n" + reqFields);
+      	window.uploadForm.reset();
+      	return false;
+    } else {
+    	return true;
+    }
+}
+
+fireBoards.prototype.uploadFile = function(e) {
+
+	if(this.validateAddCourse()) {
+  e.preventDefault();
+			var file = e.target.files[0];
 		      var metadata = {
 		          'contentType': file.type
 		      };
-		      var storageRef = this.storage.ref('fireboards/' + category.value + "/" + firebase.auth().currentUser.uid + '_' + bookTitle.value);
+		      var storageRef = this.storage.ref('fireboards/' + this.categorySel.value + "/" + this.auth.currentUser.uid + '_' + this.courseNameField.value);
 
 		      //var storageRef = this.storage.ref('projects/projectName/assets/assetName/original/')
 
@@ -434,57 +486,106 @@ fireBoards.prototype.upload = function (e) {
 		          alert('Upload failed! Ensure that you are uploading a file with acceptable format.')
 		        },
 		        function() {
-		            this.downloadURL = task.snapshot.downloadURL;
+		            var downloadURL = task.snapshot.downloadURL;
 
 					var postData = {
-					    category: category.value,
+					    category: categorySel.value,
 					    courseBannerURL: 'assets/images/DefaultFileBanner.png',
-					    courseDescription: courseDescription.value,
-					    courseName: courseName.value,
-					    courseType: courseType.value,
+					    courseDescription: courseDescField.value,
+					    courseName: courseNameField.value,
+					    courseType: courseTypeSel.value,
 					    courseURL: downloadURL,
 					    overallRating: 0,
 					    popularity: 0,
 					    uploadDate: Date.now(),
-					    uploadedBy: auth.currentUser.email
+					    uploadedBy: firebase.auth().currentUser.email
 					};
 
-		            var coursesRef = this.database.ref('fireCourses').push(postData);
+		            var coursesRef = firebase.database().ref('fireCourses').push(postData, snap => {
+		            	alert('New course added!');
+            			window.uploadForm.reset();
+                    	uploader.value = 0;
+		            });
 
   		        }
 		      );
-    	} else {
-    		var postData = {
-			    category: category.value,
+	}
+}
+
+fireBoards.prototype.addVideo = function() {
+	if(this.validateAddCourse()) {
+		var postData = {
+			    category: categorySel.value,
 			    courseBannerURL: 'assets/images/DefaultVideoBanner.png',
-			    courseDescription: courseDescription.value,
-			    courseName: courseName.value,
-			    courseType: courseType.value,
-			    courseURL: courseURL.value,
+			    courseDescription: courseDescField.value,
+			    courseName: courseNameField.value,
+			    courseType: courseTypeSel.value,
+			    courseURL: courseVidURL.value,
 			    overallRating: 0,
 			    popularity: 0,
 			    uploadDate: Date.now(),
-			    uploadedBy: auth.currentUser.email
+			    uploadedBy: firebase.auth().currentUser.email
 			};
-            var coursesRef = this.database.ref('fireCourses').push(postData, snap => {
+            var coursesRef = firebase.database().ref('fireCourses').push(postData, snap => {
             	alert('New course added!');
-            },error =>{
-            	alert('Error on adding new course. Please try again.');
+            	window.uploadForm.reset();
             });
-    	}
-    }
+        }
 }
 
 fireBoards.prototype.updateUser = function(user) {
   	if(this.value !== null && this.bio.value !== "") {
 	    var updateUserPost = {
-	      bio : bio.value
+	      bio : this.bioTextArea.value
 	    };
 	    var userRef = this.database.ref('users/' + user.uid);
 	    userRef.update(updateUserPost);
 	    console.log("User bio updated on DB.");
 	    alert("Profile updated!");
 	}
+}
+
+fireBoards.prototype.showURLField = function() {
+	if(this.courseTypeSel.value !== 'File') {
+		this.courseURLVideo.removeAttribute('hidden');
+		this.addCourse.removeAttribute('hidden');
+		this.courseURLFile.setAttribute('hidden', 'true');
+		this.uploader.setAttribute('hidden', 'true');
+	} else {
+		this.courseURLFile.removeAttribute('hidden');
+		this.uploader.removeAttribute('hidden');
+		this.courseURLVideo.setAttribute('hidden', 'true');
+		this.addCourse.setAttribute('hidden', 'true');
+	}
+}
+
+fireBoards.prototype.addCourseToLearn = function(courseId) {
+	var coursesRef = this.database.ref('fireCourses/' + courseId).once('value', function(snapshot) {
+		var postData = {
+			category: snapshot.child("category").val(),
+			completionDateTime: 0,
+			courseName: snapshot.child("courseName").val(),
+			myRating: 0,
+			overallRating: snapshot.child("overallRating").val(),
+			popularity: snapshot.child("popularity").val(),
+			status: "In Progress"
+		};
+
+		var coursesRef = firebase.database().ref('userCourses/' + this.auth.currentUser.uid + '/' + courseId).set(postData, snap => {
+            alert('Course was added to your Fireboards list!');
+            var rootRef = firebase.database().ref();
+            var updatePopularity = {};
+
+            updatePopularity['/fireCourses/' + courseId + '/popularity'] = snapshot.child("popularity").val()+1;
+  			updatePopularity['/userCourses/' + this.auth.currentUser.uid + '/' + courseId + '/popularity'] = snapshot.child("popularity").val()+1;
+
+  			var updates = rootRef.update(updates);
+  			console.log("Popularity updated for " + courseId);
+
+         });
+	}).catch(e => {
+		console.error("Firecourses node is having an error. Please try again", e.message());
+	});
 }
 
 fireBoards.prototype.listAdminUsers = function () {
