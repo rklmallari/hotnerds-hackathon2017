@@ -109,7 +109,7 @@ fireBoards.prototype.onAuthStateChanged = function(user) {
   	this.manageLink.removeAttribute('class');
   	this.reportsLink.removeAttribute('class');
   	this.profileLink.removeAttribute('class');
-    //this.checkUserExist(user);
+    this.addUserInDatabase(user);
 
   } else {
    	
@@ -123,8 +123,8 @@ fireBoards.prototype.onAuthStateChanged = function(user) {
   }
 };
 
-fireBoards.prototype.checkUserExist = function (user) {
-  var userRef = this.database.ref('users/' + user.uid);
+fireBoards.prototype.addUserInDatabase = function (user) {
+  /*var userRef = this.database.ref('users/' + user.uid);
   userRef.once('value', function(snapshot) {
     if (snapshot.val() == null) {
       userRef.set({
@@ -137,7 +137,28 @@ fireBoards.prototype.checkUserExist = function (user) {
       });
       console.log("User updated on DB.");
     }
+  });*/
+  var adminFlag = false;
+
+  this.database.ref().child('admins').orderByChild('email').equalTo(user.email).once('value').then(function (snapshot) {
+   	if(snapshot.val() === null) {
+   		console.log("not admin");
+   		adminFlag = false;
+   	} else {
+   		console.log("admin");
+   		adminFlag = true;
+   	}
+   	console.log("user" + user.uid); 
+   	firebase.database().ref("users/" + user.uid).update({
+		email: user.email,
+		userName: user.displayName,
+		bio: "Hey I'm cool!",
+		photoUrl: user.photoURL || '/images/profile_placeholder.png',
+		adminFlag: adminFlag
+	});
   });
+
+  
 };
 
 fireBoards.prototype.addAdminUser = function () {
