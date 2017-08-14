@@ -885,7 +885,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             <section class="col-sm-8 maincontent">
                 <h3>Add New Course</h3>
                 <p>
-                  Course Name/Title: <input style="display:inline;" type="text" id="courseNameField" name="courseNameField" class="adminFields" placeholder="Course Name/Title"/>
+                  <form id="uploadForm">Course Name/Title: <input style="display:inline;" type="text" id="courseNameField" name="courseNameField" class="adminFields" placeholder="Course Name/Title"/>
                   Course Description: <input style="display:inline;" type="text" id="courseDescField" name="courseDescField" class="adminFields" placeholder="Course Description"/>
                   Course Category: <select id="categorySel" class="adminFields">
                     <option selected value="">---Select Category---</option>
@@ -902,7 +902,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                   <div id="courseURLVideo" hidden>Course URL: <input style="display:inline;" type="text" id="courseVidURL" name="courseVidURL" class="adminFields" placeholder="Video URL here..."/>
                   <input type="button" value="Add Course" id="addCourse" style="background-color:grey; color:black" hidden></div>
                   <div id="courseURLFile" hidden>
-                  <form id="uploadForm">Upload File: <input type="file" class="form-control" id="uploadBox" /><progress value="0" max="100" id="uploader" hidden>0%</progress></form>
+                  Upload File: <input type="file" class="form-control" id="uploadBox" /><progress value="0" max="100" id="uploader" hidden>0%</progress></form>
                   <br><i>Note: Only accepts .pdf, .doc/.docx, .ppt/.pptx, .xls/.xlsx and .txt files only. Upload will start after selecting a file.</i></div>
                 </p>
             </section>

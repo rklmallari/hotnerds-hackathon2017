@@ -472,7 +472,8 @@ fireBoards.prototype.uploadFile = function(e) {
 
 		            var coursesRef = firebase.database().ref('fireCourses').push(postData, snap => {
 		            	alert('New course added!');
-            			location.reload();
+            			window.uploadForm.reset();
+                    	uploader.value = 0;
 		            });
 
   		        }
@@ -496,7 +497,7 @@ fireBoards.prototype.addVideo = function() {
 			};
             var coursesRef = firebase.database().ref('fireCourses').push(postData, snap => {
             	alert('New course added!');
-            	location.reload();
+            	window.uploadForm.reset();
             });
         }
 }
