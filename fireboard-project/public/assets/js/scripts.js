@@ -339,7 +339,122 @@ fireBoards.prototype.myFBShow = function() {
 		this.coursesLink.removeAttribute('class');
 }
 
+fireBoards.prototype.upload = function (e) {
+  e.preventDefault();
 
+  	var reqFields = "";
+  	if(category.value === "" || category.value === null) {
+  		reqFields += "Category";
+  	}
+  	if(courseDescription.value === "" || courseDescription.value === null) {
+  		if (reqFields !== "") {
+  			reqFields += ", Course Description";
+  		} else {
+  			reqFields += "Course Description";
+  		}
+  	}
+  	if(courseName.value === "" || courseName.value === null) {
+  		if (reqFields !== "") {
+  			reqFields += ", Course Name";
+  		} else {
+  			reqFields += "Course Name";
+  		}
+  	}
+  	if(courseType.value === "" || courseType.value === null) {
+  		if (reqFields !== "") {
+  			reqFields += ", Course Type";
+  		} else {
+  			reqFields += "Course Type";
+  		}
+
+  		if (courseType !== "File" && (courseURL === null || courseURL === "")) {
+  			if (reqFields !== "") {
+  				reqFields += ", Course URL";
+	  		} else {
+	  			reqFields += "Course URL";
+	  		}
+  		}
+  	}
+
+  	if(reqFields !== "") {
+      alert("Please populate below required field(s): \n" + reqFields);
+    } else {
+
+    	if (category.value === "File") {
+    		  var file = e.target.files[0];
+		      var metadata = {
+		          'contentType': file.type
+		      };
+		      var storageRef = this.storage.ref('fireboards/' + category.value + "/" + firebase.auth().currentUser.uid + '_' + bookTitle.value);
+
+		      //var storageRef = this.storage.ref('projects/projectName/assets/assetName/original/')
+
+		      var task = storageRef.put(file, metadata);
+
+		      task.on('state_changed', 
+
+		        function(snapshot) {
+		          var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) *100;
+		          uploader.value = percentage;
+		          console.log('Uploaded', snapshot.totalBytes, 'bytes.');
+		        },
+		        function(error) {
+		          console.error('Upload failed:', error);
+		          alert('Upload failed! Ensure that you are uploading a file with acceptable format.')
+		        },
+		        function() {
+		            this.downloadURL = task.snapshot.downloadURL;
+
+					var postData = {
+					    category: category.value,
+					    courseBannerURL: 'assets/images/DefaultFileBanner.png',
+					    courseDescription: courseDescription.value,
+					    courseName: courseName.value,
+					    courseType: courseType.value,
+					    courseURL: downloadURL,
+					    overallRating: 0,
+					    popularity: 0,
+					    uploadDate: Date.now(),
+					    uploadedBy: auth.currentUser.email
+					};
+
+		            var coursesRef = this.database.ref('fireCourses').push(postData);
+
+  		        }
+		      );
+    	} else {
+    		var postData = {
+			    category: category.value,
+			    courseBannerURL: 'assets/images/DefaultVideoBanner.png',
+			    courseDescription: courseDescription.value,
+			    courseName: courseName.value,
+			    courseType: courseType.value,
+			    courseURL: courseURL.value,
+			    overallRating: 0,
+			    popularity: 0,
+			    uploadDate: Date.now(),
+			    uploadedBy: auth.currentUser.email
+			};
+            var coursesRef = this.database.ref('fireCourses').push(postData, snap => {
+            	alert('New course added!');
+            },error =>{
+            	alert('Error on adding new course. Please try again.');
+            });
+    	}
+    }
+}
+
+fireBoards.prototype.updateUser = function(user) {
+  	if(this.value !== null && this.bio.value !== "") {
+	    var updateUserPost = {
+	      bio : bio.value
+	    };
+	    var userRef = this.database.ref('users/' + user.uid);
+	    userRef.update(updateUserPost);
+	    console.log("User bio updated on DB.");
+	    alert("Profile updated!");
+	}
+}
 
 window.onload = function() {
   window.fireBoards = new fireBoards();
