@@ -32,7 +32,7 @@ function addAdminUser() {
     			console.log("User to be converted to admin is found.");
 
     			// Add in admins node.
-    			database.ref('admins').push({
+    			database.ref('admins/KSDLKFSJDFLKDSF').push({
 	  				email: currEmail
 	  			});
 

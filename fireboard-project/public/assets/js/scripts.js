@@ -34,6 +34,12 @@ function fireBoards() {
   this.profileLink.addEventListener('click', this.profileShow.bind(this));
   this.myFBLink.addEventListener('click', this.myFBShow.bind(this));
 
+  // 
+	
+  this.adminMUAddUserBtn = document.getElementById('adminMUAddUserBtn');
+  this.adminMUAddUserBtn.addEventListener('click', this.addAdminUser.bind(this));
+  this.readyStateCounter = 0;
+
   this.signOutList.addEventListener('click', this.signOut.bind(this));
   this.signInList.addEventListener('click', this.signIn.bind(this));
   this.initFirebase();
@@ -100,6 +106,78 @@ fireBoards.prototype.checkUserExist = function (user) {
       console.log("User updated on DB.");
     }
   });
+};
+
+fireBoards.prototype.addAdminUser = function () {
+ 
+  	/*
+	  	database.ref('admins/' + userId).set({
+	  	  username: name,
+	  	  email: email,
+	  	  profile_picture : imageUrl
+	  	});
+	  	*/
+    var currEmail = document.getElementById('adminMUEmailField').value;
+    this.readyStateCounter = 0;
+	console.log("addAdminUser, " + currEmail);
+	//this.getUIDfromEmail(currEmail);
+
+	firebase.database().ref('/users/').once('value').then(function (snapshot) {
+		var arr = snapshot.val();
+		var arr2 = Object.keys(arr);
+		var key = arr2[0];
+		//currEmail = document.getElementById('adminMUEmailField').value;
+
+		for (var key in snapshot.val())
+		{
+			console.log(arr[key].email);
+			console.log("Current Email: " + currEmail);
+			if (arr[key].email == currEmail){
+    			console.log("User to be converted to admin is found.");
+
+    			fireBoards.getUIDfromEmail(currEmail);
+
+    			// Set adminFlag to true in users node.
+    			firebase.database().ref('/users/' + key).once('value').then(function (snapshot) {
+    				snapshot.ref.update({adminFlag: 'true'});
+    				//arr[key].adminFlag = true;
+    			});
+    			break;
+    		}
+    	}
+    });
+
+
+};
+
+/*
+fireBoards.prototype.getUIDfromEmailPromise = function (email) {
+    return new Promise(resolve => {
+        getUIDfromEmail(email, resolve);
+    });
+}*/
+
+fireBoards.prototype.getUIDfromEmail = function(email) {
+  var xhttp = new XMLHttpRequest();
+  var targetUrl = "https://us-central1-fireboard-hackathon2017.cloudfunctions.net/getUIDByEmail?email=" + email;
+  
+  xhttp.onreadystatechange = function() {
+    /*if (this.readyState == 4 && this.status == 200) {
+      console.log(this.responseText);
+    }else if (this.status){
+		document.getElementById("demo").innerHTML = "Can not access: " + targetUrl 
+			+ " <br /> Response: " + this.status + " " + this.responseText;
+	}else{
+		document.getElementById("demo").innerHTML = "Loading... ";
+	}*/
+		if (this.status == 200) {
+			var uid = this.responseText;
+			console.log(uid);
+    	}
+  };
+  
+  xhttp.open("GET", targetUrl, true);
+  xhttp.send();
 };
 
 fireBoards.prototype.checkSetup = function() {
@@ -265,4 +343,6 @@ fireBoards.prototype.myFBShow = function() {
 
 window.onload = function() {
   window.fireBoards = new fireBoards();
+
+  $('<p>').text('im a new p').appendTo($('#listOfAdminUsers'));
 };

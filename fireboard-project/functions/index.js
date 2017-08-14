@@ -7,6 +7,7 @@ admin.initializeApp({
   databaseURL: "https://fireboard-hackathon2017.firebaseio.com"
 });
 
+var database = admin.database();
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
@@ -20,7 +21,7 @@ exports.getUIDByEmail = functions.https.onRequest((request, response) => {
 	response.header('Content-Type','application/json');
     response.header('Access-Control-Allow-Origin', '*');
     response.header('Access-Control-Allow-Headers', 'Content-Type');
-    
+
   var email = request.query.email;
   console.log("Email: " + email);
 
@@ -28,7 +29,13 @@ exports.getUIDByEmail = functions.https.onRequest((request, response) => {
     // See the UserRecord reference doc for the contents of userRecord.
     console.log("Successfully fetched user data:", userRecord.toJSON());
 
-    response.status(200).send(userRecord.uid);
+	var ref = database.ref("admins/" + userRecord.uid);
+
+    ref.update({
+		email: email
+	});
+
+    response.status(200).end();
   })
   .catch(function(error) {
     console.log("Error fetching user data:", error);
