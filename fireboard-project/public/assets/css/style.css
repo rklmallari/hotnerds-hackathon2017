@@ -20,15 +20,16 @@ h1, .h1, h2, .h2, h3, .h3 {
 	margin-top: 30px;
 }
 h2 {
-	margin: 30px 0;
+	margin: 30px;
 }
 a{
     color:#3d84e6;
 }
 a:hover, a:focus{
-    color:#3d84e6;
-    text-decoration: underline;
+    color:#FFA000;
+    text-decoration: none;
 }
+
 .navbar-toggle {
 	background-color: rgba(0, 0, 0, 0.89);
 }
@@ -66,7 +67,8 @@ label {
 	border-radius: 0px;
 }
 .navbar-inverse .navbar-brand img {
-	width: 171px;
+	width: 230px;
+	margin: -13px -30px 0;
 }
 .section-title {
 	margin-bottom: 20px;
@@ -74,6 +76,7 @@ label {
 /* Header */
 #head {
 	/*background: #181015 url( ../images/bg_header.jpg) no-repeat;*/
+	background-color: #ffffff;
 	background-size: cover;
 	height: 600px;
 	text-align: center;
@@ -248,7 +251,7 @@ margin: 0 auto;
 .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus, 
 .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus,
 .navbar-inverse .navbar-nav > .active > a{
-	background: #3d84e6;
+	background: #3D3D3D;
 	color: #fff !important;
     border-radius: 0px;
 } 
@@ -258,7 +261,7 @@ margin: 0 auto;
 .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover{
 color: #fff !important;
     border-radius: 0px;
-    background: #3d84e6;
+    background: #3D3D3D;
 }
 .heading-text{
     position: absolute;
@@ -322,6 +325,9 @@ div.hbox {
 ul.list-spaces li {
 	margin-bottom: 10px;
 }
+
+/* Courses */
+
 /* Helpers */
 .container-full {
 	margin: 0 auto;
@@ -379,6 +385,9 @@ img.pull-left {
 }
 .featured-box .text {
 	padding-left: 0px;
+}
+.maincontent h3, .panel h3 {
+	color: #FFA000;
 }
 .featured-box h3 {
     font-size: 18px;
@@ -750,7 +759,7 @@ nav#filter a.current {
 }
 #head.secondary { 
 	padding-top: 0px;
-	background:#3d84e6;
+	background:#FFA000;
 	/*background: #3d84e6;*/
 	background-size: cover;
 	text-align: center; 
@@ -943,22 +952,31 @@ list-style: none;
 
 .video-list-thumbs{}
 .video-list-thumbs > li{
+	background-color: #4f4f4f;
+	margin-right: 40px;
     margin-bottom:12px
 }
 .video-list-thumbs > li:last-child{}
 .video-list-thumbs > li > a{
 	display:block;
 	position:relative;
-	background-color: #212121;
+	background-color: #4f4f4f;
 	color: #fff;
-	padding: 8px;
+	padding: 10px;
 	border-radius:3px
+	margin-left: -10px;
 }
 .video-list-thumbs > li > a:hover{
 	background-color:#000;
 	transition:all 500ms ease;
 	box-shadow:0 2px 4px rgba(0,0,0,.3);
 	text-decoration:none
+	color:#FFA000;
+}
+.video-list-thumbs h1{
+	color:#FFA000;
+	padding:0px;
+	margin: 20px 0 0;
 }
 .video-list-thumbs h2{
 	bottom: 0;
@@ -1026,7 +1044,7 @@ list-style: none;
 }
 
 .adminButton {
-	background-color: #3D84E6;
+	background-color: #3D3D3D;
 	border: none;
 	color: white;
 	padding: 10px 22px;

@@ -37,8 +37,10 @@ function fireBoards() {
   // 
 	
   this.adminMUAddUserBtn = document.getElementById('adminMUAddUserBtn');
+  this.adminMURemoveUserBtn = document.getElementById('adminMURemoveUserBtn');
+
   this.adminMUAddUserBtn.addEventListener('click', this.addAdminUser.bind(this));
-  this.readyStateCounter = 0;
+  this.adminMURemoveUserBtn.addEventListener('click', this.removeAdminUser.bind(this));
 
   this.signOutList.addEventListener('click', this.signOut.bind(this));
   this.signInList.addEventListener('click', this.signIn.bind(this));
@@ -149,6 +151,35 @@ fireBoards.prototype.addAdminUser = function () {
 
 
 };
+
+fireBoards.prototype.removeAdminUser = function () {
+
+	var currEmail = document.getElementById('adminMUEmailField').value;
+    this.readyStateCounter = 0;
+	console.log("removeAdminUser, " + currEmail);
+	//this.getUIDfromEmail(currEmail);
+
+	firebase.database().ref('/users/').once('value').then(function (snapshot) {
+		var arr = snapshot.val();
+		var arr2 = Object.keys(arr);
+		var key = arr2[0];
+		//currEmail = document.getElementById('adminMUEmailField').value;
+
+		for (var key in snapshot.val())
+		{
+			console.log(arr[key].email);
+			console.log("Current Email: " + currEmail);
+			if (arr[key].email == currEmail){
+
+    			// Set adminFlag to true in users node.
+    			console.log("Deleted");
+    			firebase.database().ref('/admins/' + key).remove();
+    			break;
+    		}
+    	}
+    });
+
+}
 
 /*
 fireBoards.prototype.getUIDfromEmailPromise = function (email) {
@@ -283,7 +314,7 @@ fireBoards.prototype.reportsShow = function() {
 }
 
 fireBoards.prototype.announcementsShow = function() {
-	this.announcementsPage.removeAttribute('hidden');
+		this.announcementsPage.removeAttribute('hidden');
 		this.aboutPage.setAttribute('hidden', true);
 		this.aboutLink.removeAttribute('class');
 		this.homePage.setAttribute('hidden', true);
@@ -458,7 +489,7 @@ fireBoards.prototype.updateUser = function(user) {
 
 fireBoards.prototype.listAdminUsers = function () {
 
-	console.log("listAdminusers");
+	console.log("List Admin Users");
 
 	firebase.database().ref('/admins/').once('value').then(function (snapshot) {
 		var arr = snapshot.val();
@@ -475,8 +506,76 @@ fireBoards.prototype.listAdminUsers = function () {
 
 }
 
+fireBoards.prototype.listFireCourses = function () {
+
+	console.log("List FireCourses");
+
+	firebase.database().ref('/fireCourses/').on('value', function (snapshot) {
+		var arr = snapshot.val();
+		var arr2 = Object.keys(arr);
+		var key = arr2[0];
+		//currEmail = document.getElementById('adminMUEmailField').value;
+
+		//$('#listOfFireCourseSpan').empty();
+
+		for (var key in snapshot.val())
+		{
+			console.log(arr[key].courseDescription);
+			$('#listOfFireCourseSpan').append($('<li class="col-lg-3 col-sm-4 col-xs-6"><a href="#" class="courseLink" style="width:300px; height:250px;"><h1 class="courseHeaders">' + arr[key].courseName + '</h1><br><p>' + arr[key].courseDescription + '</p></a></li>'));
+
+			//$('<h1>').text(arr[key].courseName).appendTo($('#fireCourseSpan'));
+			//$('<p>').text(arr[key].courseDescription).appendTo($('#fireCourseSpan'));
+    	}
+    });
+
+}
+
+fireBoards.prototype.listMyFireCourses = function () {
+
+	console.log("List of My FireCourses");
+
+	var uid = "ENJG0kUdPzS0dmlSrpaFbyzN1YN2";
+
+	firebase.database().ref('/userCourses/' + uid).on('value', function (snapshot) {
+		var arr = snapshot.val();
+		var arr2 = Object.keys(arr);
+		var key = arr2[0];
+		//currEmail = document.getElementById('adminMUEmailField').value;
+
+		for (var key in snapshot.val())
+		{
+			console.log("User Course: " + arr[key].courseName);
+			$('#listOfMyFireCourseSpan').append($('<li class="col-lg-3 col-sm-4 col-xs-6"><a href="#" class="courseLink" style="width:300px; height:250px;"><h1 class="courseHeaders">' + arr[key].courseName + '</h1><br><p>' + arr[key].courseDescription + '</p></a></li>'));
+    	}
+    });
+
+    /*
+	firebase.database().ref('/userCourses/' + uid + '/course1').on('value', function (snapshot) {
+		var arr = snapshot.val();
+		var arr2 = Object.keys(arr);
+		var key = arr2[0];
+
+		console.log("My Firecourse: " + arr[key]);
+		//currEmail = document.getElementById('adminMUEmailField').value;
+
+		//$('#listOfFireCourseSpan').empty();
+
+		for (var key in snapshot.val())
+		{
+			console.log(arr[key].courseDescription);
+			$('#listOfMyFireCourseSpan').append($('<li class="col-lg-3 col-sm-4 col-xs-6"><a href="#" class="courseLink" style="width:300px; height:250px;"><h1 class="courseHeaders">' + arr[key].courseName + '</h1><br><p>' + arr[key].courseDescription + '</p></a></li>'));
+
+			//$('<h1>').text(arr[key].courseName).appendTo($('#fireCourseSpan'));
+			//$('<p>').text(arr[key].courseDescription).appendTo($('#fireCourseSpan'));
+    	}
+    });*/
+
+}
+
 window.onload = function() {
   window.fireBoards = new fireBoards();
 
   fireBoards.listAdminUsers();
+  fireBoards.listMyFireCourses();
+  fireBoards.listFireCourses();
 };
