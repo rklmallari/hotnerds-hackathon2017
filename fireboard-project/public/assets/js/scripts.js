@@ -90,8 +90,6 @@ function fireBoards() {
 
   //modal
   this.mySelectedCourse = "";
-  this.takeCourseBtn = document.getElementById('takeCourseBtn');
-  this.takeCourseBtn.addEventListener('click', this.takeCourse.bind(this));
   this.selectedPostData = null;
 
   this.backToFireboardsBtn = document.getElementById('backToFireboardsBtn');
@@ -144,6 +142,14 @@ fireBoards.prototype.onAuthStateChanged = function(user) {
     this.addUserInDatabase(user);
     this.showAddedCourses();
     this.showPostedAnnouncements();
+  	this.listAdminUsers();
+  	this.listFireCourses();
+
+  	this.database.ref('/userCourses/').on('value', function(snapshot) {
+  		if (snapshot.hasChild(firebase.auth().currentUser.uid)){
+  			fireBoards.listMyFireCourses();
+		}
+  	});
 
   } else {
    	
@@ -183,13 +189,29 @@ fireBoards.prototype.addUserInDatabase = function (user) {
    		adminFlag = true;
    	}
    	console.log("user" + user.uid); 
-   	firebase.database().ref("users/" + user.uid).update({
-		email: user.email,
+
+   	var userRef = firebase.database().ref("users/" + user.uid);
+ 	userRef.once('value', function(snapshot) {
+    if (snapshot.val() === null) {
+      userRef.set({
+        email: user.email,
 		userName: user.displayName,
 		bio: "Hey I'm cool!",
-		photoUrl: user.photoURL || '/images/profile_placeholder.png',
+		photoUrl: user.photoURL || '/assets/images/profile_placeholder.png',
 		adminFlag: adminFlag
+      });
+      console.log("User inserted on DB.");
+    } else {
+        userRef.update({
+		email: user.email,
+		userName: user.displayName,
+		photoUrl: user.photoURL || '/assets/images/profile_placeholder.png',
+		adminFlag: adminFlag
+      });
+      console.log("User updated on DB.");
+    }
 	});
+	
   });
 
   
@@ -209,7 +231,7 @@ fireBoards.prototype.addAdminUser = function () {
 	console.log("addAdminUser, " + currEmail);
 	//this.getUIDfromEmail(currEmail);
 
-	firebase.database().ref('/users/').once('value').then(function (snapshot) {
+	firebase.database().ref('/users/').on('value').then(function (snapshot) {
 		var arr = snapshot.val();
 		var arr2 = Object.keys(arr);
 		var key = arr2[0];
@@ -244,7 +266,7 @@ fireBoards.prototype.removeAdminUser = function () {
 	console.log("removeAdminUser, " + currEmail);
 	//this.getUIDfromEmail(currEmail);
 
-	firebase.database().ref('/users/').once('value').then(function (snapshot) {
+	firebase.database().ref('/users/').on('value').then(function (snapshot) {
 		var arr = snapshot.val();
 		var arr2 = Object.keys(arr);
 		var key = arr2[0];
@@ -630,21 +652,22 @@ fireBoards.prototype.addCourseToLearn = function(courseId) {
 			category: snapshot.child("category").val(),
 			completionDateTime: 0,
 			courseName: snapshot.child("courseName").val(),
+			courseDescription: snapshot.child("courseDescription").val(),
 			myRating: 0,
 			overallRating: snapshot.child("overallRating").val(),
 			popularity: snapshot.child("popularity").val(),
 			status: "In Progress"
 		};
 
-		var coursesRef = firebase.database().ref('userCourses/' + this.auth.currentUser.uid + '/' + courseId).set(postData, snap => {
+		var coursesRef = firebase.database().ref('userCourses/' + firebase.auth().currentUser.uid + '/' + courseId).set(postData, snap => {
             alert('Course was added to your Fireboards list!');
             var rootRef = firebase.database().ref();
             var updatePopularity = {};
 
             updatePopularity['/fireCourses/' + courseId + '/popularity'] = snapshot.child("popularity").val()+1;
-  			updatePopularity['/userCourses/' + this.auth.currentUser.uid + '/' + courseId + '/popularity'] = snapshot.child("popularity").val()+1;
+  			updatePopularity['/userCourses/' + firebase.auth().currentUser.uid + '/' + courseId + '/popularity'] = snapshot.child("popularity").val()+1;
 
-  			var updates = rootRef.update(updates);
+  			var updates = rootRef.update(updatePopularity);
   			console.log("Popularity updated for " + courseId);
 
          });
@@ -796,8 +819,9 @@ fireBoards.prototype.showSelectedCourse = function (elementsArray, elementID) {
 					console.log("Took " + fireBoards.mySelectedCourse);
 	
 					var uid = firebase.auth().currentUser.uid;
-	
-					firebase.database().ref("userCourses/" + uid + "/" + fireBoards.mySelectedCourse).update(fireBoards.selectedPostData);
+					
+					fireBoards.addCourseToLearn(fireBoards.mySelectedCourse);
+					//firebase.database().ref("userCourses/" + uid + "/" + fireBoards.mySelectedCourse).update(fireBoards.selectedPostData);
 	
 					//$('#takeCourseBtn').text('Taken');
 
@@ -840,7 +864,6 @@ fireBoards.prototype.checkIfCourseIsTaken = function (callback) {
 		
 				for (var key in snapshot.val())
 				{
-					console.log(fireBoards.mySelectedCourse + " and " + key);
 					if (fireBoards.mySelectedCourse == key)
 					{
 						callback(true);
@@ -944,10 +967,7 @@ fireBoards.prototype.listMyFireCourses = function () {
 
 	console.log("List of My FireCourses");
 
-	// TODO: Remove
-	var uid = "ENJG0kUdPzS0dmlSrpaFbyzN1YN2";
-
-	firebase.database().ref('/userCourses/' + uid).on('value', function (snapshot) {
+	firebase.database().ref('/userCourses/' + firebase.auth().currentUser.uid).on('value', function (snapshot) {
 		var arr = snapshot.val();
 		var arr2 = Object.keys(arr);
 		var key = arr2[0];
@@ -983,13 +1003,10 @@ fireBoards.prototype.showMySelectedCourse = function (elementsArray, elementID) 
 	var courseIndex;
 	var courseID;
 
-	// TODO: Remove
-	var uid = "ENJG0kUdPzS0dmlSrpaFbyzN1YN2";
-
 	courseIndex = elementsArray.indexOf(elementID);
 	console.log("Course is at index " + courseIndex);
 
-	firebase.database().ref('/userCourses/' + uid).on('value', function (snapshot) {
+	firebase.database().ref('/userCourses/' + firebase.auth().currentUser.uid).once('value', function (snapshot) {
 		var arr = snapshot.val();
 		var arr2 = Object.keys(arr);
 		var key = arr2[0];
@@ -1001,9 +1018,6 @@ fireBoards.prototype.showMySelectedCourse = function (elementsArray, elementID) 
 			{
 				console.log("Found Course: " + arr[key].courseName);
 
-				fireBoards.selectedCoursePage.removeAttribute('hidden');
-				fireBoards.myFCPage.setAttribute('hidden', true);
-
 				$('#selectedCourseH1').text(arr[key].courseName);
 				$('#selectedCoursePar').text(arr[key].courseDescription);
 
@@ -1013,6 +1027,9 @@ fireBoards.prototype.showMySelectedCourse = function (elementsArray, elementID) 
 		}
 
 
+	}).then( function () {
+		fireBoards.selectedCoursePage.removeAttribute('hidden');
+		fireBoards.myFCPage.setAttribute('hidden', true);
 	});
 }
 
@@ -1079,9 +1096,5 @@ function deleteAnnouncement (announcementId) {
 
 window.onload = function() {
   window.fireBoards = new fireBoards();
-
-  fireBoards.listAdminUsers();
-  fireBoards.listMyFireCourses();
-  fireBoards.listFireCourses();
   //fireBoards.initializeFireboardsUI();
 };
