@@ -76,13 +76,9 @@ exports.pushAnnouncements = functions.database.ref('/announcements/{id}').onCrea
     snap.forEach(function(snapshot) {
       usersRef.child(snapshot.key).on('value', function(s) {
         sendAnnouncementsEmail(s.child('email').val(), announcement.title, announcement.details);
-      }).then(snaps => {
-          console.log("Email notifications have been sent to all users.");
-        })
-        .catch(e => {
-          console.log(e.message);
-        });
+      });
     });
+    console.log("Email notifications have been sent to all users.");
   });
 });
 
@@ -109,12 +105,8 @@ exports.emailCourseStatusChanges = functions.database.ref('/userCourses/{uid}/{c
   return usersRef.on('value', function(snap) {
     snap.forEach(function(snapshot) {
         sendCourseStatusUpdateEmail(s.child('email').val(), userCourse.courseName, userCourse.status, userCourse.myRating);
-    }).then(snaps => {
-          console.log("Email notification has been sent to user: ", userUid);
-        })
-        .catch(e => {
-          console.log(e.message);
-        });
+    });
+    console.log("Email notification has been sent to user: ", userUid);
   });
 });
 
