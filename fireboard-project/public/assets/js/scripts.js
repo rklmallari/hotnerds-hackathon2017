@@ -110,6 +110,7 @@ fireBoards.prototype.onAuthStateChanged = function(user) {
   	this.reportsLink.removeAttribute('class');
   	this.profileLink.removeAttribute('class');
     this.addUserInDatabase(user);
+    this.showAddedCourses();
 
   } else {
    	
@@ -492,7 +493,7 @@ fireBoards.prototype.uploadFile = function(e) {
 		      var metadata = {
 		          'contentType': file.type
 		      };
-		      var storageRef = this.storage.ref('fireboards/' + this.categorySel.value + "/" + this.auth.currentUser.uid + '_' + this.courseNameField.value);
+		      var storageRef = this.storage.ref('fireboards/' + this.categorySel.value + "/" + this.courseNameField.value);
 
 		      //var storageRef = this.storage.ref('projects/projectName/assets/assetName/original/')
 
@@ -529,7 +530,6 @@ fireBoards.prototype.uploadFile = function(e) {
 		            	alert('New course added!');
             			window.uploadForm.reset();
                     	uploader.value = 0;
-            			this.showAddedCourses();
 		            });
 
   		        }
@@ -554,7 +554,6 @@ fireBoards.prototype.addVideo = function() {
             var coursesRef = firebase.database().ref('fireCourses').push(postData, snap => {
             	alert('New course added!');
             	window.uploadForm.reset();
-            	this.showAddedCourses();
             });
         }
 }
@@ -729,13 +728,13 @@ function deleteCourse (courseId, courseName, category) {
 
     var deletes = {};
 
-    deletes['/fireCourse/' + courseId] = null;
+    deletes['/fireCourses/' + courseId] = null;
 
     var deleteBook = coursesRef.update(deletes);
     console.log("Course deleted from database");
 
     var courseStorageRef = firebase.storage().ref('fireboards/' + category);
-    courseStorageRef.endAt('_' + courseName).delete()
+    courseStorageRef.child(courseName).delete()
       .then(e => {
         alert("Course has been removed from the database and cloud storage.");
       })
