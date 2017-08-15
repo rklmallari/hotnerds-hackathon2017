@@ -18,7 +18,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	<link rel="stylesheet" href="assets/css/font-awesome.min.css"> 
 	<link rel="stylesheet" href="assets/css/bootstrap-theme.css" media="screen"> 
 	<link rel="stylesheet" href="assets/css/style.css">
-    <link rel='stylesheet' id='camera-css'  href='assets/css/camera.css' type='text/css' media='all'> 
+  <link rel='stylesheet' id='camera-css'  href='assets/css/camera.css' type='text/css' media='all'> 
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!--[if lt IE 9]>
 	<script src="assets/js/html5shiv.js"></script>
@@ -384,7 +384,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         <p id="selectedCourseFCPar"></p>
         <p><b>Ratings:</b> <span id="modalCourseRating"> </span><br>
         <b>Popularity:</b> <span id="modalPopularity"> </span></p><br><br>
-        <button class="modalButtons" id="takeCourseBtn"> Take Course </button>
+        <button class="modalButtons" id="takeCourseBtn"> Take Course </button><br><br>
+        <h3>Comments</h3>
+        <div style="height:200px;overflow-y:scroll">
+          <ul id="commentsList" style="list-style: none; text-align: left"></ul>
+        </div>
       </div>
     </div>
 
@@ -472,6 +476,36 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 <h3>Comments</h3>
                 <p>
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eveniet, consequuntur eius repellendus eos aliquid molestiae ea laborum ex Lorem ipsum dolor sit amet, consectetur adipisicing elit.                
+                </p>
+            </section>
+
+            <section class="col-sm-8 maincontent">
+                <h3>Rate</h3>
+                <p>
+                  Your Rating: <fieldset class="rating" id="courseRateField">
+                      <input type="radio" id="star5" name="rating" value="5" /><label class = "full" for="star5" title="Awesome - 5 stars"></label>
+                      <!-- <input type="radio" id="star4half" name="rating" value="4 and a half" /><label class="half" for="star4half" title="Pretty good - 4.5 stars"></label> -->
+                      <input type="radio" id="star4" name="rating" value="4" /><label class = "full" for="star4" title="Pretty good - 4 stars"></label>
+                      <!-- <input type="radio" id="star3half" name="rating" value="3 and a half" /><label class="half" for="star3half" title="Meh - 3.5 stars"></label> -->
+                      <input type="radio" id="star3" name="rating" value="3" /><label class = "full" for="star3" title="Meh - 3 stars"></label>
+                      <!-- <input type="radio" id="star2half" name="rating" value="2 and a half" /><label class="half" for="star2half" title="Kinda bad - 2.5 stars"></label> -->
+                      <input type="radio" id="star2" name="rating" value="2" /><label class = "full" for="star2" title="Kinda bad - 2 stars"></label>
+                      <!-- <input type="radio" id="star1half" name="rating" value="1 and a half" /><label class="half" for="star1half" title="Meh - 1.5 stars"></label> -->
+                      <input type="radio" id="star1" name="rating" value="1" /><label class = "full" for="star1" title="Sucks big time - 1 star"></label>
+                      <!-- <input type="radio" id="starhalf" name="rating" value="half" /><label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label> -->
+                  </fieldset>
+                </p>
+            </section>
+
+            <section class="col-sm-8 maincontent">
+                <h3>Comments</h3>
+                <div style="height:250px;overflow-y:scroll">
+                  <ul id="selectedCommentsList" style="list-style: none; text-align: left"></ul>
+                </div>
+                <p>
+                <br>
+                  Add New Comment: <form id="commentForm"><textarea class="adminFields" id="commentsTextArea" rows="5" cols="50" placeholder="Add your comment here..."></textarea>
+                  <input type="button" value="Add Comment" id="addComment" class="adminButton"></form>
                 </p>
             </section>
             <!-- /main -->
@@ -832,7 +866,6 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			</div>
 		</div>
 	</footer>
-
 	<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
 	<script src="assets/js/modernizr-latest.js"></script> 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -877,7 +910,6 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 		});
       
-</script>
-    
+	</script>
 </body>
 </html>

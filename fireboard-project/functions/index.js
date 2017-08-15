@@ -65,3 +65,68 @@ function sendWelcomeEmail(email, displayName) {
     console.log('A welcome email was sent to:', email);
   });
 }
+
+exports.pushAnnouncements = functions.database.ref('/announcements/{id}').onCreate(event => {
+  const announcement = event.data.val();
+
+  console.log("Sending an email notification for a new announcement...");
+
+  var usersRef = admin.database().ref('/users');
+  return usersRef.on('value', function(snap) {
+    snap.forEach(function(snapshot) {
+      usersRef.child(snapshot.key).on('value', function(s) {
+        sendAnnouncementsEmail(s.child('email').val(), announcement.title, announcement.details);
+      }).then(snaps => {
+          console.log("Email notifications have been sent to all users.");
+        })
+        .catch(e => {
+          console.log(e.message);
+        });
+    });
+  });
+});
+
+function sendAnnouncementsEmail(email, announcementTitle, announcementDetails) {
+  const mailOptions = {
+    from: `${APP_NAME} <noreply@firebase.com>`,
+    to: email
+  };
+
+  mailOptions.subject = `New Announcement from ${APP_NAME}`;
+  mailOptions.text = `${announcementTitle}: ${announcementDetails}`;
+  return mailTransport.sendMail(mailOptions).then(() => {
+    console.log('An email for the announcement was sent to:', email);
+  });
+}
+
+exports.emailCourseStatusChanges = functions.database.ref('/userCourses/{uid}/{courseId}').onWrite(event => {
+  const userCourse = event.data.val();
+  const userUid = event.params.uid;
+
+  console.log("Sending an email notification for user update status...");
+
+  var usersRef = admin.database().ref('/users');
+  return usersRef.on('value', function(snap) {
+    snap.forEach(function(snapshot) {
+        sendCourseStatusUpdateEmail(s.child('email').val(), userCourse.courseName, userCourse.status, userCourse.myRating);
+    }).then(snaps => {
+          console.log("Email notification has been sent to user: ", userUid);
+        })
+        .catch(e => {
+          console.log(e.message);
+        });
+  });
+});
+
+function sendCourseStatusUpdateEmail(email, courseTitle, courseStatus, rating) {
+  const mailOptions = {
+    from: `${APP_NAME} <noreply@firebase.com>`,
+    to: email
+  };
+
+  mailOptions.subject = `Course Status Update on ${APP_NAME}`;
+  mailOptions.text = `${courseTitle}: ${courseStatus}. `;
+  return mailTransport.sendMail(mailOptions).then(() => {
+    console.log('An email for course status update was sent to:', email);
+  });
+}
