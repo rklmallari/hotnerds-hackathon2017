@@ -65,6 +65,18 @@ function fireBoards() {
   this.adminMUAddUserBtn = document.getElementById('adminMUAddUserBtn');
   this.adminMURemoveUserBtn = document.getElementById('adminMURemoveUserBtn');
 
+  //comments
+  this.commentsTextArea = document.getElementById('commentsTextArea');
+  this.addComment = document.getElementById('addComment');
+  this.commentForm = document.getElementById('commentForm');
+
+  //rating
+  this.star1 = document.getElementById('star1');
+  this.star2 = document.getElementById('star2');
+  this.star3 = document.getElementById('star3');
+  this.star4 = document.getElementById('star4');
+  this.star5 = document.getElementById('star5');
+
   //events for nav links
   this.homeLink.addEventListener('click', this.homeShow.bind(this));
   this.aboutLink.addEventListener('click', this.aboutShow.bind(this));
@@ -87,6 +99,9 @@ function fireBoards() {
   //events for admin page
   this.adminMUAddUserBtn.addEventListener('click', this.addAdminUser.bind(this));
   this.adminMURemoveUserBtn.addEventListener('click', this.removeAdminUser.bind(this));
+
+  // //events for comments
+  // this.addComment.addEventListener('click', this.pushComment.bind(this));
 
   //modal
   this.mySelectedCourse = "";
@@ -1011,6 +1026,7 @@ fireBoards.prototype.showMySelectedCourse = function (elementsArray, elementID) 
 	courseIndex = elementsArray.indexOf(elementID);
 	console.log("Course is at index " + courseIndex);
 
+	var courseId;
 	firebase.database().ref('/userCourses/' + firebase.auth().currentUser.uid).once('value', function (snapshot) {
 		var arr = snapshot.val();
 		var arr2 = Object.keys(arr);
@@ -1025,26 +1041,38 @@ fireBoards.prototype.showMySelectedCourse = function (elementsArray, elementID) 
 
 				$('#selectedCourseH1').text(arr[key].courseName);
 				$('#selectedCoursePar').text(arr[key].courseDescription);
+				courseId = key;
 
 				break;
 			}
 			ctr++;
 		}
 
-
 	}).then( function () {
 		fireBoards.selectedCoursePage.removeAttribute('hidden');
 		fireBoards.myFCPage.setAttribute('hidden', true);
+		showCourseComments(courseId);
 	});
 }
 
 function showCourseComments(courseId) {
+	addComment.setAttribute('onclick', 'pushComment("' + courseId + '")');
+	star1.setAttribute('onclick', 'rateCourse("' + courseId + '", "1")');
+	star2.setAttribute('onclick', 'rateCourse("' + courseId + '", "2")');
+	star3.setAttribute('onclick', 'rateCourse("' + courseId + '", "3")');
+	star4.setAttribute('onclick', 'rateCourse("' + courseId + '", "4")');
+	star5.setAttribute('onclick', 'rateCourse("' + courseId + '", "5")');
+	getMyRating(courseId);
 	var commentsRef = firebase.database().ref('comments/' + courseId + '/messages').on('value', function(snapshot) {
 		var objects = snapshot.val();
 		console.log("Show comments");
 	    $('#commentsList').empty();
+	    $('#selectedCommentsList').empty();
 	    if (objects === null) {
 	      $('#commentsList').append($('<li/>',{
+	          html: '<p style="font-weight:700">No comments available yet for this course.'
+	        }));
+	      $('#selectedCommentsList').append($('<li/>',{
 	          html: '<p style="font-weight:700">No comments available yet for this course.'
 	        }));
 	    } else {
@@ -1053,23 +1081,109 @@ function showCourseComments(courseId) {
 	        $('#commentsList').append($('<li/>',{
 	          html: '<i><br><span class="fa fa-quote-left" />&nbsp;&nbsp;' + objects[key].comment + '&nbsp;&nbsp;<span class="fa fa-quote-right" /><br>' + objects[key].userName + '<br>'+ formatDate(date) + '</i>'
 	        }));
+	        $('#selectedCommentsList').append($('<li/>',{
+	          html: '<i><br><span class="fa fa-quote-left" />&nbsp;&nbsp;' + objects[key].comment + '&nbsp;&nbsp;<span class="fa fa-quote-right" /><br>' + objects[key].userName + '<br>'+ formatDate(date) + '</i>'
+	        }));
 	      }
 	    }
 	});
 }
 
-fireBoards.prototype.initializeFireboardsUI = function () {
+function pushComment(courseId) {
+	if(commentsTextArea.value === null || commentsTextArea.value === "") {
+		alert("Please input your comment for the course.");
+	} else {
+		var postData = {
+			comment: commentsTextArea.value,
+			commentDateTime: Date.now(),
+			userName: firebase.auth().currentUser.displayName
+		};
 
-	console.log("Initializing Fireboards UI");
-	var courseLinks = document.getElementsByClassName('courseLink');
-
-	for (var i = 0; i < courseLinks.length; i++)
-	{
-		courseLinks[i].addEventListener('click', function() {
-			console.log("Yay!");
+		var commentsRef = firebase.database().ref('comments/' + courseId + '/messages/').push(postData, snap => {
+		   	alert('New comment posted!');
+        	window.announcementForm.reset();
+        	commentForm.reset();
 		});
 	}
+}
 
+function rateCourse(courseId, rate) {
+	console.log("User rating: ", rate);
+	var overallRate = 0;
+	var count = 0;
+	var coursesRef = firebase.database().ref('courseRating/' + courseId).once('value', function(snapshot) {
+		var objects = snapshot.val();
+
+		for(var key in objects){
+			overallRate += objects[key].rating;
+			count++;
+		}
+
+		var newOverallRating = Math.floor(overallRate/count);
+
+		var rootRef = firebase.database().ref();
+
+		var fcrootRef = rootRef.child('fireCourses').child(courseId).child('overallRating');
+		var crootRef = rootRef.child('courseRating').child(courseId).child(firebase.auth().currentUser.uid).child('rating');
+		var ucrootRef1 = rootRef.child('userCourses').child(firebase.auth().currentUser.uid).child(courseId).child('myRating');
+		var ucrootRef2 = rootRef.child('userCourses').child(firebase.auth().currentUser.uid).child(courseId).child('overallRating');
+
+		fcrootRef.transaction(function(currentRate) {
+		   return newOverallRating;
+		});
+
+		crootRef.transaction(function(currentRate) {
+		   return rate;
+		});
+
+		ucrootRef1.transaction(function(currentRate) {
+		   return rate;
+		});
+
+		ucrootRef2.transaction(function(currentRate) {
+		   return newOverallRating;
+		});
+
+		console.log("Overall Rating updated for " + courseId);
+	 	alert("Rating of " + rate + " successful! Thanks!");
+	});
+
+	 //    var updateRating = {};
+
+	 //    updateRating['/fireCourses/' + courseId + '/overallRating'] = newOverallRating;
+	 //    updateRating['/courseRating/' + courseId + '/' + firebase.auth().currentUser.uid + '/rating'] = rate;
+		// updateRating['/userCourses/' + firebase.auth().currentUser.uid + '/' + courseId + '/myRating'] = rate;
+		// updateRating['/userCourses/' + firebase.auth().currentUser.uid + '/' + courseId + '/overallRating'] = newOverallRating;
+
+	 //  	var updates = rootRef.update(updateRating)
+	 //  		.then(function (e){
+	 //  			console.log("Overall Rating updated for " + courseId);
+	 //  			alert("Rating of " + rate + " successful! Thanks!");
+	 //  		})
+	 //  		.catch(e => {
+	 //  			console.log("Error: ", e.message());
+	 //  			alert("Rating Failed. Please try again later.");
+	 //  		});
+
+	return;
+}
+
+function getMyRating(courseId) {
+	var coursesRef = firebase.database().ref('userCourses/' + firebase.auth().currentUser.uid + '/' + courseId + '/myRating').on('value', function(snapshot) {
+		if(snapshot.val() === "1") {
+			star1.checked = true;
+		} else if(snapshot.val() === "2") {
+			star2.checked = true;
+		} else if(snapshot.val() === "3") {
+			star3.checked = true;
+		} else if(snapshot.val() === "4") {
+			star4.checked = true;
+		} else {
+			star5.checked = true;
+		}
+
+	});
+	console.log("Rating for " + courseId + "successfully retrieved.");
 }
 
 function deleteCourse (courseId, courseName, category) {
@@ -1127,5 +1241,4 @@ function formatDate(date) {
 
 window.onload = function() {
   window.fireBoards = new fireBoards();
-  //fireBoards.initializeFireboardsUI();
 };

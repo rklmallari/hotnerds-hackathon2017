@@ -1,36 +1,36 @@
-[debug] [2017-08-15T09:34:55.691Z] ----------------------------------------------------------------------
-[debug] [2017-08-15T09:34:55.692Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve
-[debug] [2017-08-15T09:34:55.692Z] CLI Version:   3.9.2
-[debug] [2017-08-15T09:34:55.692Z] Platform:      linux
-[debug] [2017-08-15T09:34:55.693Z] Node Version:  v8.2.1
-[debug] [2017-08-15T09:34:55.693Z] Time:          Tue Aug 15 2017 17:34:55 GMT+0800 (PHT)
-[debug] [2017-08-15T09:34:55.693Z] ----------------------------------------------------------------------
+[debug] [2017-08-15T14:30:21.950Z] ----------------------------------------------------------------------
+[debug] [2017-08-15T14:30:21.952Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve
+[debug] [2017-08-15T14:30:21.952Z] CLI Version:   3.9.2
+[debug] [2017-08-15T14:30:21.952Z] Platform:      linux
+[debug] [2017-08-15T14:30:21.952Z] Node Version:  v8.2.1
+[debug] [2017-08-15T14:30:21.952Z] Time:          Tue Aug 15 2017 22:30:21 GMT+0800 (PHT)
+[debug] [2017-08-15T14:30:21.952Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2017-08-15T09:34:55.702Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2017-08-15T09:34:55.702Z] > authorizing via signed-in user
-[debug] [2017-08-15T09:34:55.704Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
-[debug] [2017-08-15T09:34:55.704Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token { refresh_token: '1/ZzT--c5UD7KwLjJ8rCuslSYU32OkeAg9OZ4m90btV9w',
+[debug] [2017-08-15T14:30:21.960Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-08-15T14:30:21.960Z] > authorizing via signed-in user
+[debug] [2017-08-15T14:30:21.961Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2017-08-15T14:30:21.961Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token { refresh_token: '1/ZzT--c5UD7KwLjJ8rCuslSYU32OkeAg9OZ4m90btV9w',
   client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
   client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
   grant_type: 'refresh_token',
   scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
- Tue Aug 15 2017 17:34:55 GMT+0800 (PHT)
-[debug] [2017-08-15T09:34:56.152Z] <<< HTTP RESPONSE 200
-[debug] [2017-08-15T09:34:56.155Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/fireboard-hackathon2017  
- Tue Aug 15 2017 17:34:56 GMT+0800 (PHT)
-[debug] [2017-08-15T09:34:57.779Z] <<< HTTP RESPONSE 200
-[debug] [2017-08-15T09:34:57.780Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/fireboard-hackathon2017/tokens  
- Tue Aug 15 2017 17:34:57 GMT+0800 (PHT)
-[debug] [2017-08-15T09:34:58.757Z] <<< HTTP RESPONSE 200
+ Tue Aug 15 2017 22:30:21 GMT+0800 (PHT)
+[debug] [2017-08-15T14:30:22.405Z] <<< HTTP RESPONSE 200
+[debug] [2017-08-15T14:30:22.409Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/fireboard-hackathon2017  
+ Tue Aug 15 2017 22:30:22 GMT+0800 (PHT)
+[debug] [2017-08-15T14:30:23.993Z] <<< HTTP RESPONSE 200
+[debug] [2017-08-15T14:30:23.993Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/fireboard-hackathon2017/tokens  
+ Tue Aug 15 2017 22:30:23 GMT+0800 (PHT)
+[debug] [2017-08-15T14:30:25.338Z] <<< HTTP RESPONSE 200
 [info] 
 [info] === Serving from '/usr/local/google/home/raykevin/Documents/Project/Hackathon2017/fireboard-project'...
 [info] 
-[debug] [2017-08-15T09:34:58.759Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/fireboard-hackathon2017  
- Tue Aug 15 2017 17:34:58 GMT+0800 (PHT)
-[debug] [2017-08-15T09:35:00.527Z] <<< HTTP RESPONSE 200
-[debug] [2017-08-15T09:35:00.527Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/741989479700/clients/_:getWebAppConfig  
- Tue Aug 15 2017 17:35:00 GMT+0800 (PHT)
-[debug] [2017-08-15T09:35:01.364Z] <<< HTTP RESPONSE 200
+[debug] [2017-08-15T14:30:25.340Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/fireboard-hackathon2017  
+ Tue Aug 15 2017 22:30:25 GMT+0800 (PHT)
+[debug] [2017-08-15T14:30:26.692Z] <<< HTTP RESPONSE 200
+[debug] [2017-08-15T14:30:26.692Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/741989479700/clients/_:getWebAppConfig  
+ Tue Aug 15 2017 22:30:26 GMT+0800 (PHT)
+[debug] [2017-08-15T14:30:27.547Z] <<< HTTP RESPONSE 200
 [info] i  hosting: Serving hosting files from: public
 [info] ✔  hosting: Local server: http://localhost:5000
 
