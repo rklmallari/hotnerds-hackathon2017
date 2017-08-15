@@ -33,6 +33,7 @@ function fireBoards() {
   this.bioTextArea = document.getElementById('bioTextArea');
   this.userPic = document.getElementById('userPic');
   this.updProfButton = document.getElementById('updProfButton');
+  this.profileBio = document.getElementById('profileBio');
 
   //manage page
   this.courseNameField = document.getElementById('courseNameField');
@@ -427,11 +428,10 @@ fireBoards.prototype.profileShow = function() {
 		this.userEmailField.setAttribute('value', this.auth.currentUser.email);
 		this.userPic.setAttribute('src', this.auth.currentUser.photoURL);
 
-		var userRef = this.database.ref('users/' + this.auth.currentUser.uid).once('value', function(snapshot) {
+		var userRef = this.database.ref('users/' + this.auth.currentUser.uid).on('value', function(snapshot) {
 			bioTextArea.setAttribute('value', snapshot.child("bio").val());
 			adminFlagField.setAttribute('value', snapshot.child("adminFlag").val() ? 'Yes' : 'No');
-		}).catch(e => {
-			console.log("Bio is currently null.");
+			profileBio.innerHTML = '<i>"' + snapshot.child("bio").val() + '"</i>';
 		});
 
 }
@@ -575,12 +575,12 @@ fireBoards.prototype.addVideo = function() {
         }
 }
 
-fireBoards.prototype.updateUser = function(user) {
-  	if(this.value !== null && this.bio.value !== "") {
+fireBoards.prototype.updateUser = function() {
+  	if(this.bioTextArea.value !== null && this.bioTextArea.value !== "") {
 	    var updateUserPost = {
-	      bio : this.bioTextArea.value
+	      bio : bioTextArea.value
 	    };
-	    var userRef = this.database.ref('users/' + user.uid);
+	    var userRef = this.database.ref('users/' + this.auth.currentUser.uid);
 	    userRef.update(updateUserPost);
 	    console.log("User bio updated on DB.");
 	    alert("Profile updated!");
