@@ -37,14 +37,14 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav pull-right mainNav">
-					<li id="home"><a href="#">Home</a></li>
-          <li id="about"><a href="#">About</a></li>
-          <li id="announcements"><a href="#">Announcements</a></li>
-          <li id="courses" class="hide"><a href="#">Fireboards</a></li>
-          <li id="myFireboards" class="hide"><a href="#">My FireCourses</a></li>
-          <li id="manageFireboards" class="hide"><a href="#">Manage Fireboards</a></li>
-          <li id="reports" class="hide"><a href="#">Reports</a></li>
-          <li id="myProfile" class="hide"><a href="#">My Profile</a></li>
+					<li id="home"><a href="#home">Home</a></li>
+          <li id="about"><a href="#about">About</a></li>
+          <li id="announcements"><a href="#announcements">Announcements</a></li>
+          <li id="courses" class="hide"><a href="#fireboards">Fireboards</a></li>
+          <li id="myFireboards" class="hide"><a href="#myfirecourses">My FireCourses</a></li>
+          <li id="manageFireboards" class="hide"><a href="#managefireboards">Manage Fireboards</a></li>
+          <li id="reports" class="hide"><a href="#reports">Reports</a></li>
+          <li id="myProfile" class="hide"><a href="#myprofile">My Profile</a></li>
 					<!-- <li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
 						<ul class="dropdown-menu">
@@ -467,7 +467,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     Email: <input style="display:inline;" type="text" id="userEmailField" name="userEmailField" class="adminFields" disabled />
                     Admin?: <input style="display:inline;" type="text" id="adminFlagField" name="adminFlagField" class="adminFields" disabled />
                     Brief Bio: <textarea class="adminFields" id="bioTextArea" rows="8" cols="50" placeholder="Your bio..."></textarea>
-                    <input type="button" value="Update Profile" id="updProfButton" style="background-color:grey; color:black">
+                    <input type="button" value="Update Profile" id="updProfButton" class="adminButton">
                 </p>
             </section>
             <!-- /main -->
@@ -498,17 +498,34 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     <section class="container">
         <div class="row">
             <!-- main content -->
+            <section id="announcementAdminSection" class="col-sm-8 maincontent">
+                <h3>Add New Announcement</h3>
+                <p>
+                  <form id="announcementForm">
+                    Title<span style="color:red">*</span>: <input style="display:inline;" type="text" id="announcementTitle" name="announcementTitle" class="adminFields" placeholder="Announcement title goes here..." />
+                    Details<span style="color:red">*</span>: <textarea class="adminFields" id="announcementDetails" rows="5" cols="30" placeholder="Announcement details go here..."></textarea>
+                    <input type="button" value="Post Announcement" id="postAnnouncement" class="adminButton">
+                  </form>
+                </p>
+            </section>
+
+            <aside class="col-sm-4 sidebar sidebar-right">
+
+                <div class="panel">
+                <img src="assets/images/announcement.png" style="width:280px; height:auto" />
+                </div>
+
+            </aside>
+
             <section class="col-sm-8 maincontent">
                 <h3>Recent Posts</h3>
                 <p>
-                    Post 1<br>
-                    <i>Posted by: Test</i></br>
-                    <i>Posted on: August 3, 2017</i>
+                  <ul id="announcementList" style="list-style: none; text-align: left"></ul>
                 </p>
             </section>
-            <!-- /main -->
 
         </div>
+            <!-- /main -->
     </section>
   </div>
 

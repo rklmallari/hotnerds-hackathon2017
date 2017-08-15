@@ -3,12 +3,13 @@
 function fireBoards() {
   this.checkSetup();
 
+  //sign in and out objects
   this.signInLink = document.getElementById('signIn');
   this.signOutLink = document.getElementById('signOut');
   this.signInList = document.getElementById('signInList');
   this.signOutList = document.getElementById('signOutList');
 
-  //top nav bar links and paged
+  //top nav bar links and pages
   this.homeLink = document.getElementById('home');
   this.homePage = document.getElementById('homePage');
   this.aboutLink = document.getElementById('about');
@@ -46,6 +47,18 @@ function fireBoards() {
   this.uploadBox = document.getElementById('uploadBox');
   this.addCourse = document.getElementById('addCourse');
 
+  //announcements page
+  this.announcementAdminSection = document.getElementById('announcementAdminSection');
+  this.announcementForm = document.getElementById('announcementForm');
+  this.announcementTitle = document.getElementById('announcementTitle');
+  this.announcementDetails = document.getElementById('announcementDetails');
+  this.postAnnouncement = document.getElementById('postAnnouncement');
+  this.announcementList = document.getElementById('announcementList');
+
+  //admin page
+  this.adminMUAddUserBtn = document.getElementById('adminMUAddUserBtn');
+  this.adminMURemoveUserBtn = document.getElementById('adminMURemoveUserBtn');
+
   //events for nav links
   this.homeLink.addEventListener('click', this.homeShow.bind(this));
   this.aboutLink.addEventListener('click', this.aboutShow.bind(this));
@@ -64,15 +77,18 @@ function fireBoards() {
   this.uploadBox.addEventListener('change', this.uploadFile.bind(this));
   this.addCourse.addEventListener('click', this.addVideo.bind(this));
 
-  //admin page
-  this.adminMUAddUserBtn = document.getElementById('adminMUAddUserBtn');
-  this.adminMURemoveUserBtn = document.getElementById('adminMURemoveUserBtn');
-
+  //events for admin page
   this.adminMUAddUserBtn.addEventListener('click', this.addAdminUser.bind(this));
   this.adminMURemoveUserBtn.addEventListener('click', this.removeAdminUser.bind(this));
 
+  //events for announcements page
+  this.postAnnouncement.addEventListener('click', this.postNewAnnouncement.bind(this));
+
+  //sign in and out events
   this.signOutList.addEventListener('click', this.signOut.bind(this));
   this.signInList.addEventListener('click', this.signIn.bind(this));
+
+  //firebase initialization
   this.initFirebase();
 }
 
@@ -111,6 +127,7 @@ fireBoards.prototype.onAuthStateChanged = function(user) {
   	this.profileLink.removeAttribute('class');
     this.addUserInDatabase(user);
     this.showAddedCourses();
+    this.showPostedAnnouncements();
 
   } else {
    	
@@ -558,27 +575,6 @@ fireBoards.prototype.addVideo = function() {
         }
 }
 
-fireBoards.prototype.showAddedCourses = function() {
-	var coursesRef = this.database.ref('fireCourses').on('value', function(snapshot) {
-		var objects = snapshot.val();
-	    $('#courseList').empty();
-	    if (objects === null) {
-	      $('#courseList').append($('<li/>',{
-	          html: '<p style="font-weight:700">No courses added yet.</P'
-	        }));
-	    } else {
-	      for(var key in objects){
-	      	var date = new Date(objects[key].uploadDate);
-	        $('#courseList').append($('<li/>',{
-	          html: '<img src="' + objects[key].courseBannerURL + '" style="width:30px; height:auto" />&nbsp;&nbsp;<a style="color:black; font-weight:900" href="' + objects[key].courseURL + '" title="View '+ objects[key].courseName + '" target="_blank">' +
-	           objects[key].courseName + '</a><button onClick="deleteCourse(\'' + key + '\', \'' + objects[key].courseName + '\', \'' + objects[key].category + '\');" title="Delete Course" class="fa fa-remove" style="color:red; border:none; background-color:transparent" /><i><br>Course Description: ' + 
-	           objects[key].courseDescription + '<br>Category Code: ' + objects[key].category + '<br>Uploaded By: ' + objects[key].uploadedBy + '<br>Upload Date: ' + date.toLocaleDateString() + '</i><br><br><br>'
-	        }));
-	      }
-	    }
-	});
-}
-
 fireBoards.prototype.updateUser = function(user) {
   	if(this.value !== null && this.bio.value !== "") {
 	    var updateUserPost = {
@@ -634,6 +630,27 @@ fireBoards.prototype.addCourseToLearn = function(courseId) {
 	});
 }
 
+fireBoards.prototype.showAddedCourses = function() {
+	var coursesRef = this.database.ref('fireCourses').on('value', function(snapshot) {
+		var objects = snapshot.val();
+	    $('#courseList').empty();
+	    if (objects === null) {
+	      $('#courseList').append($('<li/>',{
+	          html: '<p style="font-weight:700">No courses added yet.</p>'
+	        }));
+	    } else {
+	      for(var key in objects){
+	      	var date = new Date(objects[key].uploadDate);
+	        $('#courseList').append($('<li/>',{
+	          html: '<img src="' + objects[key].courseBannerURL + '" style="width:30px; height:auto" />&nbsp;&nbsp;<a style="color:black; font-weight:900" href="' + objects[key].courseURL + '" title="View '+ objects[key].courseName + '" target="_blank">' +
+	           objects[key].courseName + '</a><button onClick="deleteCourse(\'' + key + '\', \'' + objects[key].courseName + '\', \'' + objects[key].category + '\');" title="Delete Course" class="fa fa-remove" style="color:red; border:none; background-color:transparent" /><i><br>Course Description: ' + 
+	           objects[key].courseDescription + '<br>Category Code: ' + objects[key].category + '<br>Uploaded By: ' + objects[key].uploadedBy + '<br>Upload Date: ' + date.toLocaleDateString() + '</i><br><br><br>'
+	        }));
+	      }
+	    }
+	});
+}
+
 fireBoards.prototype.listAdminUsers = function () {
 
 	console.log("List Admin Users");
@@ -675,6 +692,60 @@ fireBoards.prototype.listFireCourses = function () {
     	}
     });
 
+}
+
+fireBoards.prototype.postNewAnnouncement = function() {
+
+	var reqFields = "";
+
+	if (this.announcementTitle.value === "" || this.announcementTitle === null) {
+		reqFields += "Title";
+	}
+
+	if (this.announcementDetails.value === "" || this.announcementDetails.value === null) {
+		if (reqFields !== "") {
+  			reqFields += ", Details";
+  		} else {
+  			reqFields += "Details";
+  		}
+	}
+
+	if (reqFields !== "") {
+      	alert("Please populate below required field(s): \n" + reqFields);
+	} else {
+		var postData = {
+			details: announcementDetails.value,
+			postDate: Date.now(),
+			postedBy: this.auth.currentUser.email,
+			title: announcementTitle.value
+		};
+
+		var announceRef = this.database.ref('announcements').push(postData, snap => {
+		   	alert('New announcement posted!');
+        	window.announcementForm.reset();
+		});
+	}
+
+}
+
+fireBoards.prototype.showPostedAnnouncements = function() {
+	var coursesRef = this.database.ref('announcements').on('value', function(snapshot) {
+		var objects = snapshot.val();
+	    $('#announcementList').empty();
+	    if (objects === null) {
+	      $('#announcementList').append($('<li/>',{
+	          html: '<p style="font-weight:700">No announcements posted yet.</p>'
+	        }));
+	    } else {
+	      for(var key in objects){
+	      	var date = new Date(objects[key].postDate);
+	        $('#announcementList').append($('<li/>',{
+	          html: '<span class="fa fa-exclamation" style="font-weight:900"></span>&nbsp;&nbsp;<b>' + objects[key].title + '</b><button onClick="deleteAnnouncement(\'' + key + '\');" title="Delete Announcement" class="fa fa-remove" style="color:red; border:none; background-color:transparent" />' + 
+	          '<br>' + objects[key].details + '<br><br><i>Posted By: ' + objects[key].postedBy + '<br>Post Date: ' + date.toLocaleDateString() + '</i><br><br><br>'
+	        }));
+	      }
+	    }
+	});
 }
 
 fireBoards.prototype.listMyFireCourses = function () {
@@ -730,7 +801,7 @@ function deleteCourse (courseId, courseName, category) {
 
     deletes['/fireCourses/' + courseId] = null;
 
-    var deleteBook = coursesRef.update(deletes);
+    var delCourse = coursesRef.update(deletes);
     console.log("Course deleted from database");
 
     var courseStorageRef = firebase.storage().ref('fireboards/' + category);
@@ -742,6 +813,22 @@ function deleteCourse (courseId, courseName, category) {
         alert("Failed to remove course.");
         console.log("Error: " + e.message);
       });
+  }
+}
+
+function deleteAnnouncement (announcementId) {
+  var confirmDelete = confirm("Are you sure you want to delete this announcement?");
+  
+  if (confirmDelete) {
+    var announceRef = firebase.database().ref();
+
+    var deletes = {};
+
+    deletes['/announcements/' + announcementId] = null;
+
+    var deletePost = announceRef.update(deletes);
+    alert("Post has been successfully removed.");
+    console.log("Announcement deleted from database");
   }
 }
 
