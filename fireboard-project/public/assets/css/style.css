@@ -954,7 +954,7 @@ list-style: none;
 .video-list-thumbs > li{
 	background-color: #4f4f4f;
 	margin-right: 40px;
-    margin-bottom:12px
+    margin-bottom:12px;
 }
 .video-list-thumbs > li:last-child{}
 .video-list-thumbs > li > a{
@@ -1044,7 +1044,7 @@ list-style: none;
 }
 
 .adminButton {
-	background-color: #3D3D3D;
+	background-color: #4f4f4f;
 	border: none;
 	color: white;
 	padding: 10px 22px;
@@ -1061,9 +1061,69 @@ list-style: none;
 	display: none;
 }
 
-.form-control:focus {
-	border-color: #eee;
-	outline: 0;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(100,100,100,0.6);
-	box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(100,100,100,0.6);
+/* The Modal (background) */
+.firemodal {
+	display:none;
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 300px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.fbButtons {
+	background-color: #4f4f4f;
+	border: none;
+	color: white;
+	padding: 10px 22px;
+	text-align: center;
+	text-decoration: none;
+	display: block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
+	width: 100%;
+}
+
+.modalButtons {
+	background-color: #4f4f4f;
+	border: none;
+	color: white;
+	padding: 10px 22px;
+	text-align: center;
+	text-decoration: none;
+	display: block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
+	width: 100%;
 }

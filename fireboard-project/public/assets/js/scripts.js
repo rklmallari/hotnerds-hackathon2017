@@ -13,8 +13,8 @@ function fireBoards() {
   this.homePage = document.getElementById('homePage');
   this.aboutLink = document.getElementById('about');
   this.aboutPage = document.getElementById('aboutPage');
-  this.coursesLink = document.getElementById('courses');
-  this.coursesPage = document.getElementById('coursesPage');
+  this.fireboardsLink = document.getElementById('courses');
+  this.fireboardsPage = document.getElementById('fireboardsPage');
   this.manageLink = document.getElementById('manageFireboards');
   this.managePage = document.getElementById('managePage');
   this.reportsLink = document.getElementById('reports');
@@ -23,8 +23,9 @@ function fireBoards() {
   this.announcementsPage = document.getElementById('announcementsPage');
   this.profileLink = document.getElementById('myProfile');
   this.profilePage = document.getElementById('profilePage');
-  this.myFBLink = document.getElementById('myFireboards');
-  this.myFBPage = document.getElementById('myFBPage');
+  this.myFCLink = document.getElementById('myFireboards');
+  this.myFCPage = document.getElementById('myFCPage');
+  this.selectedCoursePage = document.getElementById('fireboardsSelectedFireCoursePage');
 
   //profile page
   this.userNameField = document.getElementById('userNameField');
@@ -49,12 +50,12 @@ function fireBoards() {
   //events for nav links
   this.homeLink.addEventListener('click', this.homeShow.bind(this));
   this.aboutLink.addEventListener('click', this.aboutShow.bind(this));
-  this.coursesLink.addEventListener('click', this.coursesShow.bind(this));
+  this.fireboardsLink.addEventListener('click', this.coursesShow.bind(this));
   this.manageLink.addEventListener('click', this.manageShow.bind(this));
   this.reportsLink.addEventListener('click', this.reportsShow.bind(this));
   this.announcementsLink.addEventListener('click', this.announcementsShow.bind(this));
   this.profileLink.addEventListener('click', this.profileShow.bind(this));
-  this.myFBLink.addEventListener('click', this.myFBShow.bind(this));
+  this.myFCLink.addEventListener('click', this.myFBShow.bind(this));
 
   //events for profile page
   this.updProfButton.addEventListener('click', this.updateUser.bind(this));
@@ -70,6 +71,15 @@ function fireBoards() {
 
   this.adminMUAddUserBtn.addEventListener('click', this.addAdminUser.bind(this));
   this.adminMURemoveUserBtn.addEventListener('click', this.removeAdminUser.bind(this));
+
+  //modal
+  this.mySelectedCourse = "";
+  this.takeCourseBtn = document.getElementById('takeCourseBtn');
+  this.takeCourseBtn.addEventListener('click', this.takeCourse.bind(this));
+  this.selectedPostData = null;
+
+  this.backToFireboardsBtn = document.getElementById('backToFireboardsBtn');
+  this.backToFireboardsBtn.addEventListener('click', this.myFBShow.bind(this));
 
   this.signOutList.addEventListener('click', this.signOut.bind(this));
   this.signInList.addEventListener('click', this.signIn.bind(this));
@@ -104,8 +114,8 @@ fireBoards.prototype.onAuthStateChanged = function(user) {
     
     this.signInList.setAttribute('class', 'hide');
     this.signOutList.removeAttribute('class');
-    this.coursesLink.removeAttribute('class');
-  	this.myFBLink.removeAttribute('class');
+    this.fireboardsLink.removeAttribute('class');
+  	this.myFCLink.removeAttribute('class');
   	this.manageLink.removeAttribute('class');
   	this.reportsLink.removeAttribute('class');
   	this.profileLink.removeAttribute('class');
@@ -115,8 +125,8 @@ fireBoards.prototype.onAuthStateChanged = function(user) {
    	
     this.signInList.removeAttribute('class');
     this.signOutList.setAttribute('class', 'hide');
-    this.coursesLink.setAttribute('class', 'hide');
-  	this.myFBLink.setAttribute('class', 'hide');
+    this.fireboardsLink.setAttribute('class', 'hide');
+  	this.myFCLink.setAttribute('class', 'hide');
   	this.manageLink.setAttribute('class', 'hide');
   	this.reportsLink.setAttribute('class', 'hide');
   	this.profileLink.setAttribute('class', 'hide');
@@ -284,10 +294,11 @@ fireBoards.prototype.homeShow = function() {
 			this.profileLink.removeAttribute('class');
 			this.managePage.setAttribute('hidden', true);
 			this.manageLink.removeAttribute('class');
-			this.myFBPage.setAttribute('hidden', true);
-			this.myFBLink.removeAttribute('class');
-			this.coursesPage.setAttribute('hidden', true);
-			this.coursesLink.removeAttribute('class');
+			this.myFCPage.setAttribute('hidden', true);
+			this.myFCLink.removeAttribute('class');
+			this.fireboardsPage.setAttribute('hidden', true);
+			this.fireboardsLink.removeAttribute('class');
+			this.selectedCoursePage.setAttribute('hidden', true);
 		}
 }
 
@@ -305,15 +316,16 @@ fireBoards.prototype.aboutShow = function() {
 			this.profileLink.removeAttribute('class');
 			this.managePage.setAttribute('hidden', true);
 			this.manageLink.removeAttribute('class');
-			this.myFBPage.setAttribute('hidden', true);
-			this.myFBLink.removeAttribute('class');
-			this.coursesPage.setAttribute('hidden', true);
-			this.coursesLink.removeAttribute('class');
+			this.myFCPage.setAttribute('hidden', true);
+			this.myFCLink.removeAttribute('class');
+			this.fireboardsPage.setAttribute('hidden', true);
+			this.fireboardsLink.removeAttribute('class');
+			this.selectedCoursePage.setAttribute('hidden', true);
 		}
 }
 
 fireBoards.prototype.coursesShow = function() {
-	this.coursesPage.removeAttribute('hidden');
+	this.fireboardsPage.removeAttribute('hidden');
 		this.aboutPage.setAttribute('hidden', true);
 		this.aboutLink.removeAttribute('class');
 		this.announcementsPage.setAttribute('hidden', true);
@@ -324,10 +336,11 @@ fireBoards.prototype.coursesShow = function() {
 			this.profileLink.removeAttribute('class');
 			this.managePage.setAttribute('hidden', true);
 			this.manageLink.removeAttribute('class');
-			this.myFBPage.setAttribute('hidden', true);
-			this.myFBLink.removeAttribute('class');
+			this.myFCPage.setAttribute('hidden', true);
+			this.myFCLink.removeAttribute('class');
 			this.homePage.setAttribute('hidden', true);
 			this.homeLink.removeAttribute('class');
+			this.selectedCoursePage.setAttribute('hidden', true);
 }
 
 fireBoards.prototype.manageShow = function() {
@@ -340,10 +353,11 @@ fireBoards.prototype.manageShow = function() {
 		this.profileLink.removeAttribute('class');
 		this.homePage.setAttribute('hidden', true);
 		this.homeLink.removeAttribute('class');
-		this.myFBPage.setAttribute('hidden', true);
-		this.myFBLink.removeAttribute('class');
-		this.coursesPage.setAttribute('hidden', true);
-		this.coursesLink.removeAttribute('class');
+		this.myFCPage.setAttribute('hidden', true);
+		this.myFCLink.removeAttribute('class');
+		this.fireboardsPage.setAttribute('hidden', true);
+		this.fireboardsLink.removeAttribute('class');
+		this.selectedCoursePage.setAttribute('hidden', true);
 }
 
 fireBoards.prototype.reportsShow = function() {
@@ -358,10 +372,11 @@ fireBoards.prototype.reportsShow = function() {
 		this.manageLink.removeAttribute('class');
 		this.announcementsPage.setAttribute('hidden', true);
 		this.announcementsLink.removeAttribute('class');
-		this.myFBPage.setAttribute('hidden', true);
-		this.myFBLink.removeAttribute('class');
-		this.coursesPage.setAttribute('hidden', true);
-		this.coursesLink.removeAttribute('class');
+		this.myFCPage.setAttribute('hidden', true);
+		this.myFCLink.removeAttribute('class');
+		this.fireboardsPage.setAttribute('hidden', true);
+		this.fireboardsLink.removeAttribute('class');
+		this.selectedCoursePage.setAttribute('hidden', true);
 }
 
 fireBoards.prototype.announcementsShow = function() {
@@ -378,10 +393,11 @@ fireBoards.prototype.announcementsShow = function() {
 			this.profileLink.removeAttribute('class');
 			this.managePage.setAttribute('hidden', true);
 			this.manageLink.removeAttribute('class');
-			this.myFBPage.setAttribute('hidden', true);
-			this.myFBLink.removeAttribute('class');
-			this.coursesPage.setAttribute('hidden', true);
-			this.coursesLink.removeAttribute('class');
+			this.myFCPage.setAttribute('hidden', true);
+			this.myFCLink.removeAttribute('class');
+			this.fireboardsPage.setAttribute('hidden', true);
+			this.fireboardsLink.removeAttribute('class');
+			this.selectedCoursePage.setAttribute('hidden', true);
 		}
 }
 
@@ -397,10 +413,11 @@ fireBoards.prototype.profileShow = function() {
 		this.manageLink.removeAttribute('class');
 		this.announcementsPage.setAttribute('hidden', true);
 		this.announcementsLink.removeAttribute('class');
-		this.myFBPage.setAttribute('hidden', true);
-		this.myFBLink.removeAttribute('class');
-		this.coursesPage.setAttribute('hidden', true);
-		this.coursesLink.removeAttribute('class');
+		this.myFCPage.setAttribute('hidden', true);
+		this.myFCLink.removeAttribute('class');
+		this.fireboardsPage.setAttribute('hidden', true);
+		this.fireboardsLink.removeAttribute('class');
+		this.selectedCoursePage.setAttribute('hidden', true);
 
 		this.userNameField.setAttribute('value', this.auth.currentUser.displayName);
 		this.userEmailField.setAttribute('value', this.auth.currentUser.email);
@@ -416,7 +433,7 @@ fireBoards.prototype.profileShow = function() {
 }
 
 fireBoards.prototype.myFBShow = function() {
-	this.myFBPage.removeAttribute('hidden');
+	this.myFCPage.removeAttribute('hidden');
 		this.aboutPage.setAttribute('hidden', true);
 		this.aboutLink.removeAttribute('class');
 		this.reportsPage.setAttribute('hidden', true);
@@ -429,8 +446,9 @@ fireBoards.prototype.myFBShow = function() {
 		this.announcementsLink.removeAttribute('class');
 		this.homePage.setAttribute('hidden', true);
 		this.homeLink.removeAttribute('class');
-		this.coursesPage.setAttribute('hidden', true);
-		this.coursesLink.removeAttribute('class');
+		this.fireboardsPage.setAttribute('hidden', true);
+		this.fireboardsLink.removeAttribute('class');
+		this.selectedCoursePage.setAttribute('hidden', true);
 }
 
 fireBoards.prototype.validateAddCourse = function () {
@@ -619,6 +637,7 @@ fireBoards.prototype.listAdminUsers = function () {
 		var key = arr2[0];
 		//currEmail = document.getElementById('adminMUEmailField').value;
 
+		$('#listOfAdminUsers').empty();
 		for (var key in snapshot.val())
 		{
 			console.log(arr[key].email);
@@ -630,9 +649,11 @@ fireBoards.prototype.listAdminUsers = function () {
 
 fireBoards.prototype.listFireCourses = function () {
 
+	var fireCoursesCounter = 0;
+	var elementsID = [];
 	console.log("List FireCourses");
 
-	firebase.database().ref('/fireCourses/').on('value', function (snapshot) {
+	firebase.database().ref('/fireCourses/').once('value', function (snapshot) {
 		var arr = snapshot.val();
 		var arr2 = Object.keys(arr);
 		var key = arr2[0];
@@ -640,57 +661,258 @@ fireBoards.prototype.listFireCourses = function () {
 
 		//$('#listOfFireCourseSpan').empty();
 
+		$('#listOfFireCourseSpan').empty();
 		for (var key in snapshot.val())
 		{
-			console.log(arr[key].courseDescription);
-			$('#listOfFireCourseSpan').append($('<li class="col-lg-3 col-sm-4 col-xs-6"><a href="#" class="courseLink" style="width:300px; height:250px;"><h1 class="courseHeaders">' + arr[key].courseName + '</h1><br><p>' + arr[key].courseDescription + '</p></a></li>'));
+			console.log(arr[key].courseDescription + ": " + fireCoursesCounter);
+			$('#listOfFireCourseSpan').append($('<li class="col-lg-3 col-sm-4 col-xs-6" id="courseLnk' + fireCoursesCounter + '"><a href="#" style="width:300px; height:250px;"><h1 class="courseHeaders">' + arr[key].courseName + '</h1><br><p>' + arr[key].courseDescription + '</p></a></li>'));
+			/*$('#courseLnk' + fireCoursesCounter).click(function () {
+    			console.log("what: " + fireCoursesCounter);
+    		});*/
 
+    		elementsID.push('courseLnk' + fireCoursesCounter);
+
+    		document.getElementById('courseLnk' + fireCoursesCounter).addEventListener('click', function(event) {
+				console.log("Yay! " + this.id);
+
+				fireBoards.showSelectedCourse(elementsID, this.id);
+			});
 			//$('<h1>').text(arr[key].courseName).appendTo($('#fireCourseSpan'));
 			//$('<p>').text(arr[key].courseDescription).appendTo($('#fireCourseSpan'));
+
+			fireCoursesCounter++;
     	}
+
+    	console.log(elementsID[0]);
+    	/*
+    	var courseLinks = document.getElementsByClassName('courseLnk');
+		for (var i = 0; i < courseLinks.length; i++)
+		{
+			courseLinks[i].addEventListener('click', function() {
+				console.log("Yay!");
+			});
+		}*/
     });
 
 }
 
+fireBoards.prototype.showSelectedCourse = function (elementsArray, elementID) {
+	console.log("Get Course UID from Element ID");
+	var courseIndex;
+	var courseID;
+
+	courseIndex = elementsArray.indexOf(elementID);
+	console.log("Course is at index " + courseIndex);
+
+	firebase.database().ref('/fireCourses/').once('value', function (snapshot) {
+		var arr = snapshot.val();
+		var arr2 = Object.keys(arr);
+		var key = arr2[0];
+		var ctr = 0;
+
+		for (var key in snapshot.val())
+		{
+			if (ctr == courseIndex)
+			{
+				console.log("Found Course: " + arr[key].courseName);
+
+				fireBoards.selectedPostData = {
+					category: arr[key].category,
+					completionDateTime: null,
+					courseDescription: arr[key].courseDescription,
+					courseName: arr[key].courseName,
+					myRating: null,
+					overallRating: arr[key].overallRating,
+					popularity: arr[key].popularity,
+					status: "In Progress"
+				};
+
+				fireBoards.mySelectedCourse = key;
+				console.log(fireBoards.mySelectedCourse);
+
+					console.log("Modal appear!");
+
+					// Get the modal
+					var modal = document.getElementById('courseModal');
+					
+					// Get the button that opens the modal
+					var takeBtn = document.getElementById("takeCourseBtn");
+					
+					// Get the <span> element that closes the modal
+					var span = document.getElementsByClassName("close")[0];
+	
+					modal.style.display = "block";
+
+					$('#selectedCourseFCH3').text(arr[key].courseName);
+					$('#selectedCourseFCPar').text(arr[key].courseDescription);
+	
+				var modalCallback = function(exists)
+				{
+					if (exists)
+					{
+						console.log("Bye button");
+						takeBtn.style.display = "none";
+					}
+				}
+
+				fireBoards.checkIfCourseIsTaken(modalCallback);
+
+				takeBtn.onclick = function() {
+					console.log("Took " + fireBoards.mySelectedCourse);
+	
+					var uid = firebase.auth().currentUser.uid;
+	
+					firebase.database().ref("userCourses/" + uid + "/" + fireBoards.mySelectedCourse).update(fireBoards.selectedPostData);
+	
+					//$('#takeCourseBtn').text('Taken');
+
+				}
+	
+				span.onclick = function() {
+					modal.style.display = "none";
+				}
+
+				window.onclick = function(event) {
+				    if (event.target == modal) {
+				        modal.style.display = "none";
+				    }
+				}	
+
+				break;
+			}
+		ctr++;
+		}
+
+	});
+}
+
+fireBoards.prototype.checkIfCourseIsTaken = function (callback) {
+
+	console.log("Checking..");
+	firebase.database().ref('/userCourses').once('value', function(snapshot) {
+		if (!snapshot.hasChild(firebase.auth().currentUser.uid)){
+			console.log("User has no courses.");
+			callback(false);
+			return;
+		}
+		else
+		{
+			console.log("User has courses");
+			firebase.database().ref('/userCourses/' + firebase.auth().currentUser.uid).on('value', function (snapshot) {
+				var arr = snapshot.val();
+				var arr2 = Object.keys(arr);
+				var key = arr2[0];
+		
+				for (var key in snapshot.val())
+				{
+					console.log(fireBoards.mySelectedCourse + " and " + key);
+					if (fireBoards.mySelectedCourse == key)
+					{
+						callback(true);
+						return;
+					}
+				}
+					
+				callback(false);
+				return;
+			});
+		}
+	});
+}
+
 fireBoards.prototype.listMyFireCourses = function () {
+
+	var myfireCoursesCounter = 0;
+	var elementsID = [];
 
 	console.log("List of My FireCourses");
 
+	// TODO: Remove
 	var uid = "ENJG0kUdPzS0dmlSrpaFbyzN1YN2";
 
-	firebase.database().ref('/userCourses/' + uid).on('value', function (snapshot) {
+	firebase.database().ref('/userCourses/' + uid).once('value', function (snapshot) {
 		var arr = snapshot.val();
 		var arr2 = Object.keys(arr);
 		var key = arr2[0];
 		//currEmail = document.getElementById('adminMUEmailField').value;
 
+		console.log("Hi");
+		$('#listOfMyFireCourseSpan').empty();
 		for (var key in snapshot.val())
 		{
 			console.log("User Course: " + arr[key].courseName);
-			$('#listOfMyFireCourseSpan').append($('<li class="col-lg-3 col-sm-4 col-xs-6"><a href="#" class="courseLink" style="width:300px; height:250px;"><h1 class="courseHeaders">' + arr[key].courseName + '</h1><br><p>' + arr[key].courseDescription + '</p></a></li>'));
-    	}
-    });
+			$('#listOfMyFireCourseSpan').append($('<li class="col-lg-3 col-sm-4 col-xs-6" id="myCourseLnk' + myfireCoursesCounter + '"><a href="#" style="width:300px; height:250px;"><h1 class="courseHeaders">' + arr[key].courseName + '</h1><br><p>' + arr[key].courseDescription + '</p></a></li>'));
+    		
+    		elementsID.push('myCourseLnk' + myfireCoursesCounter);
 
-    /*
-	firebase.database().ref('/userCourses/' + uid + '/course1').on('value', function (snapshot) {
+    		document.getElementById('myCourseLnk' + myfireCoursesCounter).addEventListener('click', function(event) {
+				console.log("My Course! " + this.id);
+
+				fireBoards.showMySelectedCourse(elementsID, this.id);
+			});
+			//$('<h1>').text(arr[key].courseName).appendTo($('#fireCourseSpan'));
+			//$('<p>').text(arr[key].courseDescription).appendTo($('#fireCourseSpan'));
+
+			myfireCoursesCounter++;
+    	}
+
+    	console.log(elementsID[0]);
+    });
+}
+
+fireBoards.prototype.showMySelectedCourse = function (elementsArray, elementID) {
+	console.log("Get Course UID from Element ID");
+	var courseIndex;
+	var courseID;
+
+	// TODO: Remove
+	var uid = "ENJG0kUdPzS0dmlSrpaFbyzN1YN2";
+
+	courseIndex = elementsArray.indexOf(elementID);
+	console.log("Course is at index " + courseIndex);
+
+	firebase.database().ref('/userCourses/' + uid).once('value', function (snapshot) {
 		var arr = snapshot.val();
 		var arr2 = Object.keys(arr);
 		var key = arr2[0];
-
-		console.log("My Firecourse: " + arr[key]);
-		//currEmail = document.getElementById('adminMUEmailField').value;
-
-		//$('#listOfFireCourseSpan').empty();
+		var ctr = 0;
 
 		for (var key in snapshot.val())
 		{
-			console.log(arr[key].courseDescription);
-			$('#listOfMyFireCourseSpan').append($('<li class="col-lg-3 col-sm-4 col-xs-6"><a href="#" class="courseLink" style="width:300px; height:250px;"><h1 class="courseHeaders">' + arr[key].courseName + '</h1><br><p>' + arr[key].courseDescription + '</p></a></li>'));
+			if (ctr == courseIndex)
+			{
+				console.log("Found Course: " + arr[key].courseName);
 
-			//$('<h1>').text(arr[key].courseName).appendTo($('#fireCourseSpan'));
-			//$('<p>').text(arr[key].courseDescription).appendTo($('#fireCourseSpan'));
-    	}
-    });*/
+				fireBoards.selectedCoursePage.removeAttribute('hidden');
+				fireBoards.myFCPage.setAttribute('hidden', true);
+
+				$('#selectedCourseH1').text(arr[key].courseName);
+				$('#selectedCoursePar').text(arr[key].courseDescription);
+
+				break;
+			}
+			ctr++;
+		}
+
+
+	});
+}
+
+fireBoards.prototype.takeCourse = function () {
+
+}
+
+fireBoards.prototype.initializeFireboardsUI = function () {
+
+	console.log("Initializing Fireboards UI");
+	var courseLinks = document.getElementsByClassName('courseLink');
+
+	for (var i = 0; i < courseLinks.length; i++)
+	{
+		courseLinks[i].addEventListener('click', function() {
+			console.log("Yay!");
+		});
+	}
 
 }
 
@@ -700,4 +922,5 @@ window.onload = function() {
   fireBoards.listAdminUsers();
   fireBoards.listMyFireCourses();
   fireBoards.listFireCourses();
+  //fireBoards.initializeFireboardsUI();
 };

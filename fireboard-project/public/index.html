@@ -375,7 +375,20 @@ License URL: http://creativecommons.org/licenses/by/3.0/
   </div>
 
   <!-- =============================================== FIREBOARDS =============================================== -->
-  <div id="coursesPage" hidden>
+
+    <!-- The Modal -->
+    <div id="courseModal" class="firemodal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3 id="selectedCourseFCH3"></h3>
+        <p id="selectedCourseFCPar"></p>
+        <p><b>Rating:</b><br>
+        <b>Uploaded Date:</b></p><br><br>
+        <button class="modalButtons" id="takeCourseBtn"> Take Course </button>
+      </div>
+    </div>
+
+  <div id="fireboardsPage" hidden>
     <header id="head" class="secondary">
             <div class="container">
                     <h1>FireBoards</h1>
@@ -395,6 +408,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
         
         </div>
+
         </section>
           <!-- container -->
           <div class="container">
@@ -411,9 +425,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             </div>
   </div>
   </div>
+
        
   <!-- =============================================== My FireCourses =============================================== -->
-  <div id="myFBPage" hidden>
+
+  <div id="myFCPage" hidden>
       <header id="head" class="secondary">
               <div class="container">
                       <h1>My FireCourses</h1>
@@ -444,6 +460,59 @@ License URL: http://creativecommons.org/licenses/by/3.0/
               </section>
             </div>
           </div>
+  </div>
+
+
+
+
+  <div id="fireboardsSelectedFireCoursePage" hidden>
+    <header id="head" class="secondary">
+            <div class="container">
+                    <h1 id="selectedCourseH1">Selected FireCourse</h1>
+                    <p id="selectedCoursePar">Description about the selected FireCourse!</p>
+                    
+                </div>
+    </header>
+
+    <!-- container -->
+    <section class="container">
+        <div class="row">
+            <!-- main content -->
+            <section class="col-sm-8 maincontent">
+                <h3>About Us</h3>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eveniet, consequuntur eius repellendus eos aliquid molestiae ea laborum ex Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eveniet, consequuntur eius repellendus eos aliquid molestiae ea laborum ex quibusdam laudantium voluptates placeat consectetur quam aliquam beatae soluta accusantium iusto nihil nesciunt unde veniam magnam repudiandae sapiente.
+                </p>
+            </section>
+            <!-- /main -->
+
+            <!-- Sidebar -->
+            <aside class="col-sm-4 sidebar sidebar-right">
+
+                <div class="panel">
+                <button class="fbButtons" id="backToFireboardsBtn"> Back to Fireboards </button>
+                <button class="fbButtons" id="removeFireCourseBtn"> Remove FireCourse </button>
+                    <h4>Latest News</h4>
+                    <ul class="list-unstyled list-spaces">
+                        <li><a href="">Responsive Design</a><br>
+                            <span class="small text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, laborum.</span></li>
+                        <li><a href="">HTML5, CSS3 and JavaScript</a><br>
+                            <span class="small text-muted">Consequuntur eius repellendus eos aliquid molestiae ea laborum ex quibusdam</span></li>
+                        <li><a href="">Bootstrap</a><br>
+                            <span class="small text-muted">Eveniet, consequuntur eius repellendus eos aliquid molestiae ea</span></li>
+                        <li><a href="">Clean Template</a><br>
+                            <span class="small text-muted">Sed, mollitia earum debitis est itaque esse reiciendis amet cupiditate.</span></li>
+                        <li><a href="">Premium Quality</a><br>
+                            <span class="small text-muted">Voluptate minus illo tenetur sint ab in culpa cumque impedit quibusdam. Saepe, molestias quia.</span></li>
+                    </ul>
+                </div>
+
+            </aside>
+            <!-- /Sidebar -->
+
+        </div>
+    </section>
+
   </div>
 
   <!-- =============================================== MY PROFILE =============================================== -->
