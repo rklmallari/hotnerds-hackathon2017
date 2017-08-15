@@ -91,8 +91,10 @@ function fireBoards() {
   //modal
   this.mySelectedCourse = "";
   this.selectedPostData = null;
-
+  this.courseModal = document.getElementById('courseModal');
   this.backToFireboardsBtn = document.getElementById('backToFireboardsBtn');
+
+  //other events
   this.backToFireboardsBtn.addEventListener('click', this.myFBShow.bind(this));
 
   //events for announcements page
@@ -690,7 +692,7 @@ fireBoards.prototype.showAddedCourses = function() {
 	        $('#courseList').append($('<li/>',{
 	          html: '<img src="' + objects[key].courseBannerURL + '" style="width:30px; height:auto" />&nbsp;&nbsp;<a style="color:black; font-weight:900" href="' + objects[key].courseURL + '" title="View '+ objects[key].courseName + '" target="_blank">' +
 	           objects[key].courseName + '</a><button onClick="deleteCourse(\'' + key + '\', \'' + objects[key].courseName + '\', \'' + objects[key].category + '\');" title="Delete Course" class="fa fa-remove" style="color:red; border:none; background-color:transparent" /><i><br>Course Description: ' + 
-	           objects[key].courseDescription + '<br>Category Code: ' + objects[key].category + '<br>Uploaded By: ' + objects[key].uploadedBy + '<br>Upload Date: ' + date.toLocaleDateString() + '</i><br><br><br>'
+	           objects[key].courseDescription + '<br>Category Code: ' + objects[key].category + '<br>Uploaded By: ' + objects[key].uploadedBy + '<br>Upload Date: ' + formatDate(date) + '</i><br><br><br>'
 	        }));
 	      }
 	    }
@@ -770,6 +772,8 @@ fireBoards.prototype.showSelectedCourse = function (elementsArray, elementID) {
 			if (ctr == courseIndex)
 			{
 				console.log("Found Course: " + arr[key].courseName);
+
+				showCourseComments(key);
 
 				fireBoards.selectedPostData = {
 					category: arr[key].category,
@@ -925,7 +929,7 @@ fireBoards.prototype.showPostedAnnouncements = function() {
 	      	var date = new Date(objects[key].postDate);
 	        $('#announcementList').append($('<li/>',{
 	          html: '<span class="fa fa-exclamation" style="font-weight:900"></span>&nbsp;&nbsp;<b>' + objects[key].title + '</b><button onClick="deleteAnnouncement(\'' + key + '\');" title="Delete Announcement" class="fa fa-remove" style="color:red; border:none; background-color:transparent" />' + 
-	          '<br>' + objects[key].details + '<br><br><i>Posted By: ' + objects[key].postedBy + '<br>Post Date: ' + date.toLocaleDateString() + '</i><br><br><br>'
+	          '<br>' + objects[key].details + '<br><br><i>Posted By: ' + objects[key].postedBy + '<br>Post Date: ' + formatDate(date) + '</i><br><br><br>'
 	        }));
 	      }
 	    }
@@ -951,7 +955,6 @@ fireBoards.prototype.searchProfile = function () {
 	        }));
 	    } else {
 	      for(var key in objects){
-	      	var date = new Date(objects[key].postDate);
 	        $('#searchProfileList').append($('<li/>',{
 	          html: '<br><img src="' + objects[key].photoUrl + '" style="width:200px;height:auto"><br>' + objects[key].userName + '<br>' + objects[key].email + '<br> <i>"'+ objects[key].bio + '"</i>'
 	        }));
@@ -994,6 +997,8 @@ fireBoards.prototype.listMyFireCourses = function () {
 			myfireCoursesCounter++;
     	}
 
+
+
     	console.log(elementsID[0]);
     });
 }
@@ -1033,9 +1038,24 @@ fireBoards.prototype.showMySelectedCourse = function (elementsArray, elementID) 
 	});
 }
 
-fireBoards.prototype.showCourseComments = function (courseId) {
-	var courseLinks = document.getElementsByClassName('courseLink');
-
+function showCourseComments(courseId) {
+	var commentsRef = firebase.database().ref('comments/' + courseId + '/messages').on('value', function(snapshot) {
+		var objects = snapshot.val();
+		console.log("Show comments");
+	    $('#commentsList').empty();
+	    if (objects === null) {
+	      $('#commentsList').append($('<li/>',{
+	          html: '<p style="font-weight:700">No comments available yet for this course.'
+	        }));
+	    } else {
+	      for(var key in objects){
+	      	var date = new Date(objects[key].commentDateTime);
+	        $('#commentsList').append($('<li/>',{
+	          html: '<i><br><span class="fa fa-quote-left" style="size:5pt" />&nbsp;&nbsp;' + objects[key].comment + '&nbsp;&nbsp;<span class="fa fa-quote-right" style="size:5pt" /><br>' + objects[key].userName + '<br>'+ formatDate(date) + '</i>'
+	        }));
+	      }
+	    }
+	});
 }
 
 fireBoards.prototype.initializeFireboardsUI = function () {
@@ -1092,6 +1112,17 @@ function deleteAnnouncement (announcementId) {
     alert("Post has been successfully removed.");
     console.log("Announcement deleted from database");
   }
+}
+
+function formatDate(date) {
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+  var strTime = hours + ':' + minutes + ' ' + ampm;
+  return date.getMonth()+1 + "/" + date.getDate() + "/" + date.getFullYear() + "  " + strTime;
 }
 
 window.onload = function() {
