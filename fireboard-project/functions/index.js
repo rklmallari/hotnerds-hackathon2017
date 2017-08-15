@@ -65,3 +65,36 @@ function sendWelcomeEmail(email, displayName) {
     console.log('A welcome email was sent to:', email);
   });
 }
+
+exports.pushAnnouncements = functions.database.ref('/announcements/{id}').onCreate(event => {
+  const announcements = event.data.val();
+
+  console.log("Sending an email notification for a new announcement...");
+
+  var usersRef = admin.database().ref('/users');
+  return usersRef.on('value', function(snap) {
+    snap.forEach(function(snapshot) {
+      usersRef.child(snapshot.key).on('value', function(s) {
+        sendAnnouncementsEmail(s.child('email').val(), announcements.title, announcements.details);
+      }).then(snaps => {
+          console.log("Email notifications have been sent to all users.");
+        })
+        .catch(e => {
+          console.log(e.message);
+        });
+    });
+  });
+});
+
+function sendAnnouncementsEmail(email, announcementTitle, announcementDetails) {
+  const mailOptions = {
+    from: `${APP_NAME} <noreply@firebase.com>`,
+    to: email
+  };
+
+  mailOptions.subject = `New Announcement from ${APP_NAME}`;
+  mailOptions.text = `${announcementTitle}: ${announcementDetails}`;
+  return mailTransport.sendMail(mailOptions).then(() => {
+    console.log('A welcome email was sent to:', email);
+  });
+}
