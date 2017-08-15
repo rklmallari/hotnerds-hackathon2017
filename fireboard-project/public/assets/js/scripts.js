@@ -569,11 +569,11 @@ fireBoards.prototype.showAddedCourses = function() {
 	        }));
 	    } else {
 	      for(var key in objects){
-	      	var date = new Date(objects[key].uploadDate*1000);
+	      	var date = new Date(objects[key].uploadDate);
 	        $('#courseList').append($('<li/>',{
 	          html: '<img src="' + objects[key].courseBannerURL + '" style="width:30px; height:auto" />&nbsp;&nbsp;<a style="color:black; font-weight:900" href="' + objects[key].courseURL + '" title="View '+ objects[key].courseName + '" target="_blank">' +
-	           objects[key].courseName + '</a><button onClick="deleteCourse(\'' + key + '\', \'' + objects[key].courseName + '\', \'' + objects[key].category + '\');" title="Delete Course" class="fa fa-remove" style="color:red; border:none; background-color:transparent" /><i><br>Course Description: "' + 
-	           objects[key].description + '"<br>Category Code: "' + objects[key].category + '"<br>Uploaded By: "' + objects[key].uploadedBy + '"<br>Upload Date: "' + date.toLocaleDateString() + '"</i><br><br><br>'
+	           objects[key].courseName + '</a><button onClick="deleteCourse(\'' + key + '\', \'' + objects[key].courseName + '\', \'' + objects[key].category + '\');" title="Delete Course" class="fa fa-remove" style="color:red; border:none; background-color:transparent" /><i><br>Course Description: ' + 
+	           objects[key].courseDescription + '<br>Category Code: ' + objects[key].category + '<br>Uploaded By: ' + objects[key].uploadedBy + '<br>Upload Date: ' + date.toLocaleDateString() + '</i><br><br><br>'
 	        }));
 	      }
 	    }
@@ -724,18 +724,18 @@ function deleteCourse (courseId, courseName, category) {
   var confirmDelete = confirm("Are you sure you want to delete this course?");
 
   if (confirmDelete) {
-    var bookRef = firebase.database().ref();
+    var coursesRef = firebase.database().ref();
     var currentUserUid = firebase.auth().currentUser.uid;
 
     var deletes = {};
 
     deletes['/fireCourse/' + courseId] = null;
 
-    var deleteBook = bookRef.update(deletes);
+    var deleteBook = coursesRef.update(deletes);
     console.log("Course deleted from database");
 
     var courseStorageRef = firebase.storage().ref('fireboards/' + category);
-    bookStorageRef.endAt('_' + courseName).delete()
+    courseStorageRef.endAt('_' + courseName).delete()
       .then(e => {
         alert("Course has been removed from the database and cloud storage.");
       })
