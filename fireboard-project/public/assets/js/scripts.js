@@ -35,6 +35,10 @@ function fireBoards() {
   this.userPic = document.getElementById('userPic');
   this.updProfButton = document.getElementById('updProfButton');
   this.profileBio = document.getElementById('profileBio');
+  this.searchSel = document.getElementById('searchSel');
+  this.searchProfileField = document.getElementById('searchProfileField');
+  this.searchProfileBtn = document.getElementById('searchProfileBtn');
+  this.searchProfileList = document.getElementById('searchProfileList');
 
   //manage page
   this.courseNameField = document.getElementById('courseNameField');
@@ -73,6 +77,7 @@ function fireBoards() {
 
   //events for profile page
   this.updProfButton.addEventListener('click', this.updateUser.bind(this));
+  this.searchProfileBtn.addEventListener('click', this.searchProfile.bind(this));
 
   //events for manage page
   this.courseTypeSel.addEventListener('change', this.showURLField.bind(this));
@@ -908,7 +913,7 @@ fireBoards.prototype.postNewAnnouncement = function() {
 }
 
 fireBoards.prototype.showPostedAnnouncements = function() {
-	var coursesRef = this.database.ref('announcements').on('value', function(snapshot) {
+	var coursesRef = this.database.ref('announcements').orderByChild('postDate').on('value', function(snapshot) {
 		var objects = snapshot.val();
 	    $('#announcementList').empty();
 	    if (objects === null) {
@@ -921,6 +926,34 @@ fireBoards.prototype.showPostedAnnouncements = function() {
 	        $('#announcementList').append($('<li/>',{
 	          html: '<span class="fa fa-exclamation" style="font-weight:900"></span>&nbsp;&nbsp;<b>' + objects[key].title + '</b><button onClick="deleteAnnouncement(\'' + key + '\');" title="Delete Announcement" class="fa fa-remove" style="color:red; border:none; background-color:transparent" />' + 
 	          '<br>' + objects[key].details + '<br><br><i>Posted By: ' + objects[key].postedBy + '<br>Post Date: ' + date.toLocaleDateString() + '</i><br><br><br>'
+	        }));
+	      }
+	    }
+	});
+}
+
+fireBoards.prototype.searchProfile = function () {
+
+	var searchBy;
+
+	if(this.searchSel.value === "Email") {
+		searchBy = 'email';
+	} else {
+		searchBy = 'userName';
+	}
+
+	var usersRef = this.database.ref().child('users').orderByChild(searchBy).equalTo(this.searchProfileField.value).on('value', function(snapshot) {
+		var objects = snapshot.val();
+	    $('#searchProfileList').empty();
+	    if (objects === null) {
+	      $('#searchProfileList').append($('<li/>',{
+	          html: '<p style="font-weight:700">No users matched the search key <i>"' + this.searchProfileField.value + '"<i></p>'
+	        }));
+	    } else {
+	      for(var key in objects){
+	      	var date = new Date(objects[key].postDate);
+	        $('#searchProfileList').append($('<li/>',{
+	          html: '<img src="' + objects[key].photoURL + '" style="width:200px;height:auto"><br>' + objects[key].userName + '<br>' + objects[key].email + '<br> <i>"'+ objects[key].bio + '"</i>'
 	        }));
 	      }
 	    }

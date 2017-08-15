@@ -538,6 +538,23 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             </aside>
             <!-- /Sidebar -->
 
+            <section class="col-sm-8 maincontent">
+                <h3>Search Other Profile</h3>
+                <p>
+                    Search by: <select id="searchSel" class="adminFields">
+                      <option selected value="">---Select---</option>
+                      <option value="Name">Name</option>
+                      <option value="Email">Email</option>
+                    </select>
+                    <input style="display:inline;" type="text" id="searchProfileField" name="searchProfileField" class="adminFields" />
+                    <input type="button" value="Search Profile" id="searchProfileBtn" class="adminButton">
+                </p>
+            </section>
+
+            <section class="col-sm-8 maincontent" id="searchResults">
+                <ul id="searchProfileList" style="list-style: none; text-align: left"></ul>
+            </section>
+
         </div>
     </section>
   </div>
