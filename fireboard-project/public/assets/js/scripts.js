@@ -699,18 +699,13 @@ fireBoards.prototype.listFireCourses = function () {
 		var arr = snapshot.val();
 		var arr2 = Object.keys(arr);
 		var key = arr2[0];
-		//currEmail = document.getElementById('adminMUEmailField').value;
-
-		//$('#listOfFireCourseSpan').empty();
+		elementsID = [];
 
 		$('#listOfFireCourseSpan').empty();
 		for (var key in snapshot.val())
 		{
 			console.log(arr[key].courseDescription + ": " + fireCoursesCounter);
 			$('#listOfFireCourseSpan').append($('<li class="col-lg-3 col-sm-4 col-xs-6" id="courseLnk' + fireCoursesCounter + '"><a href="#" style="width:300px; height:250px;"><h1 class="courseHeaders">' + arr[key].courseName + '</h1><br><p>' + arr[key].courseDescription + '</p></a></li>'));
-			/*$('#courseLnk' + fireCoursesCounter).click(function () {
-    			console.log("what: " + fireCoursesCounter);
-    		});*/
 
     		elementsID.push('courseLnk' + fireCoursesCounter);
 
@@ -719,21 +714,11 @@ fireBoards.prototype.listFireCourses = function () {
 
 				fireBoards.showSelectedCourse(elementsID, this.id);
 			});
-			//$('<h1>').text(arr[key].courseName).appendTo($('#fireCourseSpan'));
-			//$('<p>').text(arr[key].courseDescription).appendTo($('#fireCourseSpan'));
 
 			fireCoursesCounter++;
     	}
 
     	console.log(elementsID[0]);
-    	/*
-    	var courseLinks = document.getElementsByClassName('courseLnk');
-		for (var i = 0; i < courseLinks.length; i++)
-		{
-			courseLinks[i].addEventListener('click', function() {
-				console.log("Yay!");
-			});
-		}*/
     });
 
 }
@@ -746,7 +731,7 @@ fireBoards.prototype.showSelectedCourse = function (elementsArray, elementID) {
 	courseIndex = elementsArray.indexOf(elementID);
 	console.log("Course is at index " + courseIndex);
 
-	firebase.database().ref('/fireCourses/').once('value', function (snapshot) {
+	firebase.database().ref('/fireCourses/').on('value', function (snapshot) {
 		var arr = snapshot.val();
 		var arr2 = Object.keys(arr);
 		var key = arr2[0];
@@ -792,8 +777,11 @@ fireBoards.prototype.showSelectedCourse = function (elementsArray, elementID) {
 				{
 					if (exists)
 					{
-						console.log("Bye button");
 						takeBtn.style.display = "none";
+					}
+					else
+					{
+						takeBtn.style.display = "block";
 					}
 				}
 
@@ -831,7 +819,7 @@ fireBoards.prototype.showSelectedCourse = function (elementsArray, elementID) {
 fireBoards.prototype.checkIfCourseIsTaken = function (callback) {
 
 	console.log("Checking..");
-	firebase.database().ref('/userCourses').once('value', function(snapshot) {
+	firebase.database().ref('/userCourses').on('value', function(snapshot) {
 		if (!snapshot.hasChild(firebase.auth().currentUser.uid)){
 			console.log("User has no courses.");
 			callback(false);
@@ -926,10 +914,11 @@ fireBoards.prototype.listMyFireCourses = function () {
 	// TODO: Remove
 	var uid = "ENJG0kUdPzS0dmlSrpaFbyzN1YN2";
 
-	firebase.database().ref('/userCourses/' + uid).once('value', function (snapshot) {
+	firebase.database().ref('/userCourses/' + uid).on('value', function (snapshot) {
 		var arr = snapshot.val();
 		var arr2 = Object.keys(arr);
 		var key = arr2[0];
+		elementsID = [];
 		//currEmail = document.getElementById('adminMUEmailField').value;
 
 		console.log("Hi");
@@ -967,7 +956,7 @@ fireBoards.prototype.showMySelectedCourse = function (elementsArray, elementID) 
 	courseIndex = elementsArray.indexOf(elementID);
 	console.log("Course is at index " + courseIndex);
 
-	firebase.database().ref('/userCourses/' + uid).once('value', function (snapshot) {
+	firebase.database().ref('/userCourses/' + uid).on('value', function (snapshot) {
 		var arr = snapshot.val();
 		var arr2 = Object.keys(arr);
 		var key = arr2[0];
