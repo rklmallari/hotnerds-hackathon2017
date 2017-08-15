@@ -919,18 +919,18 @@ fireBoards.prototype.searchProfile = function () {
 		searchBy = 'userName';
 	}
 
-	var usersRef = this.database.ref().child('users').orderByChild(searchBy).equalTo(this.searchProfileField.value).on('value', function(snapshot) {
+	var usersRef = this.database.ref('users').orderByChild(searchBy).equalTo(searchProfileField.value).on('value', function(snapshot) {
 		var objects = snapshot.val();
 	    $('#searchProfileList').empty();
 	    if (objects === null) {
 	      $('#searchProfileList').append($('<li/>',{
-	          html: '<p style="font-weight:700">No users matched the search key <i>"' + this.searchProfileField.value + '"<i></p>'
+	          html: '<p style="font-weight:700">No users matched the search keyword <i>"' + searchProfileField.value + '"<i></p>'
 	        }));
 	    } else {
 	      for(var key in objects){
 	      	var date = new Date(objects[key].postDate);
 	        $('#searchProfileList').append($('<li/>',{
-	          html: '<img src="' + objects[key].photoURL + '" style="width:200px;height:auto"><br>' + objects[key].userName + '<br>' + objects[key].email + '<br> <i>"'+ objects[key].bio + '"</i>'
+	          html: '<br><img src="' + objects[key].photoUrl + '" style="width:200px;height:auto"><br>' + objects[key].userName + '<br>' + objects[key].email + '<br> <i>"'+ objects[key].bio + '"</i>'
 	        }));
 	      }
 	    }
@@ -1016,7 +1016,8 @@ fireBoards.prototype.showMySelectedCourse = function (elementsArray, elementID) 
 	});
 }
 
-fireBoards.prototype.takeCourse = function () {
+fireBoards.prototype.showCourseComments = function (courseId) {
+	var courseLinks = document.getElementsByClassName('courseLink');
 
 }
 
