@@ -429,7 +429,7 @@ fireBoards.prototype.profileShow = function() {
 		this.userPic.setAttribute('src', this.auth.currentUser.photoURL);
 
 		var userRef = this.database.ref('users/' + this.auth.currentUser.uid).on('value', function(snapshot) {
-			bioTextArea.setAttribute('value', snapshot.child("bio").val());
+			bioTextArea.value = snapshot.child("bio").val();
 			adminFlagField.setAttribute('value', snapshot.child("adminFlag").val() ? 'Yes' : 'No');
 			profileBio.innerHTML = '<i>"' + snapshot.child("bio").val() + '"</i>';
 		});
