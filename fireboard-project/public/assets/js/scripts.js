@@ -1152,38 +1152,43 @@ function rateCourse(courseId, rate) {
 	var coursesRef = firebase.database().ref('courseRating/' + courseId).once('value', function(snapshot) {
 		var objects = snapshot.val();
 
-		for(var key in objects){
-			overallRate += objects[key].rating;
-			count++;
-		}
+		if(objects !== null) {
+			for(var key in objects){
+				overallRate += objects[key].rating;
+				count++;
+			}
 
-		var newOverallRating = Math.floor(overallRate/count);
+			console.log("Overall rating: " + overallRate);
+			console.log("Count: " + count);
+			var newOverallRating = Math.floor(overallRate/count);
+			console.log("New rating: " + newOverallRating);
 
-		var rootRef = firebase.database().ref();
+			var rootRef = firebase.database().ref();
 
-		var fcrootRef = rootRef.child('fireCourses').child(courseId).child('overallRating');
-		var crootRef = rootRef.child('courseRating').child(courseId).child(firebase.auth().currentUser.uid).child('rating');
-		var ucrootRef1 = rootRef.child('userCourses').child(firebase.auth().currentUser.uid).child(courseId).child('myRating');
-		var ucrootRef2 = rootRef.child('userCourses').child(firebase.auth().currentUser.uid).child(courseId).child('overallRating');
+			var fcrootRef = rootRef.child('fireCourses').child(courseId).child('overallRating');
+			var crootRef = rootRef.child('courseRating').child(courseId).child(firebase.auth().currentUser.uid).child('rating');
+			var ucrootRef1 = rootRef.child('userCourses').child(firebase.auth().currentUser.uid).child(courseId).child('myRating');
+			var ucrootRef2 = rootRef.child('userCourses').child(firebase.auth().currentUser.uid).child(courseId).child('overallRating');
 
-		fcrootRef.transaction(function(currentRate) {
-		   return newOverallRating;
-		});
+			fcrootRef.transaction(function(currentRate) {
+			   return newOverallRating;
+			});
 
-		crootRef.transaction(function(currentRate) {
-		   return rate;
-		});
+			crootRef.transaction(function(currentRate) {
+			   return rate;
+			});
 
-		ucrootRef1.transaction(function(currentRate) {
-		   return rate;
-		});
+			ucrootRef1.transaction(function(currentRate) {
+			   return rate;
+			});
 
-		ucrootRef2.transaction(function(currentRate) {
-		   return newOverallRating;
-		});
+			ucrootRef2.transaction(function(currentRate) {
+			   return newOverallRating;
+			});
 
-		console.log("Overall Rating updated for " + courseId);
-	 	alert("Rating of " + rate + " successful! Thanks!");
+			console.log("Overall Rating updated for " + courseId);
+		 	alert("Rating of " + rate + " successful! Thanks!");
+		 }
 	});
 
 	 //    var updateRating = {};
@@ -1216,7 +1221,7 @@ function getMyRating(courseId) {
 			star3.checked = true;
 		} else if(snapshot.val() === "4") {
 			star4.checked = true;
-		} else {
+		} else if(snapshot.val() === "5") {
 			star5.checked = true;
 		}
 
