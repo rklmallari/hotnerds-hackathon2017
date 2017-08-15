@@ -1131,7 +1131,6 @@ list-style: none;
 	width: 100%;
 }
 
-<<<<<<< HEAD
 .courseListSpan li {
 	list-style-position: inside;
     border: 1px solid #4f4f4f;	
@@ -1147,12 +1146,12 @@ list-style: none;
     margin-bottom: 5px;
     padding: 10px;
 }
-=======
+
 @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
 
 fieldset, label { margin: 0; padding: 0; }
-body{ margin: 20px; }
-h1 { font-size: 1.5em; margin: 10px; }
+/*body{ margin: 20px; }*/
+/*h1 { font-size: 1.5em; margin: 10px; }*/
 
 /****** Style Star Rating Widget *****/
 
@@ -1189,5 +1188,4 @@ h1 { font-size: 1.5em; margin: 10px; }
 .rating > input:checked + label:hover, /* hover current star when changing rating */
 .rating > input:checked ~ label:hover,
 .rating > label:hover ~ input:checked ~ label, /* lighten current selection */
-.rating > input:checked ~ label:hover ~ label { color: #FFED85;  } 
->>>>>>> d68b2c01e109eef644b9b1a38ba9be60979b32d6
+.rating > input:checked ~ label:hover ~ label { color: #FFED85;  }

@@ -124,6 +124,7 @@ function fireBoards() {
   this.openMaterialBtn.addEventListener('click', this.openMaterial.bind(this));
   this.tagCompletedBtn.addEventListener('click', this.tagCompleted.bind(this));
   this.cancelRegistrationBtn.addEventListener('click', this.cancelRegistration.bind(this));
+
   this.backToFireboardsBtn.addEventListener('click', this.myFBShow.bind(this));
 
   //events for announcements page
@@ -992,13 +993,12 @@ fireBoards.prototype.searchProfile = function () {
 	    $('#searchProfileList').empty();
 	    if (objects === null) {
 	      $('#searchProfileList').append($('<li/>',{
-	          html: '<p style="font-weight:700">No users matched the search keyword <i>"' + fireBoards.searchProfileField.value + '"<i></p>'
+	          html: '<p style="font-weight:700">No users matched the search keyword. <i>"' + fireBoards.searchProfileField.value + '"<i></p>'
 	        }));
 	    } else {
 	      for(var key in objects){
 	        $('#searchProfileList').append($('<li/>',{
-	          //html: '<img src="' + objects[key].photoURL + '" style="width:200px;height:auto"><br><b>' + objects[key].userName + '</b><br>' + objects[key].email + '<br> <i>"'+ objects[key].bio + '"</i>'
-	          html: '<br><img src="' + objects[key].photoUrl + '" style="width:200px;height:auto"><br><b>' + objects[key].userName + '</b><br>' + objects[key].email + '<br> <i><span class="fa fa-quote-left" />&nbsp;&nbsp;'+ objects[key].bio + '&nbsp;&nbsp;<span class="fa fa-quote-right" /></i>'
+	          html: '<br><img src="' + objects[key].photoUrl + '" style="width:200px;height:auto"><br>' + objects[key].userName + '<br>' + objects[key].email + '<br> <i><span class="fa fa-quote-left" />&nbsp;&nbsp;'+ objects[key].bio + '&nbsp;&nbsp;<span class="fa fa-quote-right" /></i>'
 	        }));
 	      }
 	    }
@@ -1091,116 +1091,6 @@ fireBoards.prototype.showMySelectedCourse = function (elementsArray, elementID) 
 		fireBoards.myFCPage.setAttribute('hidden', true);
 		showCourseComments(courseId);
 	});
-}
-
-fireBoards.prototype.reportListCategories = function () {
-	
-	this.database.ref('/fireCourses/').on('value', function (snapshot) {
-		var arr = snapshot.val();
-		var arr2 = Object.keys(arr);
-		var key = arr2[0];
-		
-		$('#reportsCategorySel').empty();
-		$('#reportsCategorySel').append($('<option selected value="">---Select Category---</option>'));
-		for (var key in snapshot.val())
-		{
-			$('#reportsCategorySel').append($('<option value="' + key + '">' + arr[key].courseName + '</option>'));
-		}
-	});
-}
-
-fireBoards.prototype.reportGetCourse = function () {
-	console.log("Report Get Course: " + reportsCategorySel.value);
-	var filteredUsers = [];
-
-	firebase.database().ref('/fireCourses/').on('value', function (snapshot) {
-		var arr = snapshot.val();
-		var arr2 = Object.keys(arr);
-		var key = arr2[0];
-
-		for (var key in snapshot.val())
-		{
-			if (reportsCategorySel.value == key)
-			{
-				$('#reportCourseHeader').text(arr[key].courseName);
-			}
-		}
-	});
-
-	firebase.database().ref('/userCourses/').on('value', function (snapshot) {
-		var arr = snapshot.val();
-		var arr2 = Object.keys(arr);
-		var key = arr2[0];
-
-		$('#listOfUsersPerCategory').empty();
-
-		for (var key in snapshot.val())
-		{
-			console.log(key);
-
-			firebase.database().ref('/userCourses/' + key).on('value', function (snapshot) {
-				var arr = snapshot.val();
-				var arr2 = Object.keys(arr);
-				var key = arr2[0];
-
-				for (var key in snapshot.val())
-				{
-					if (reportsCategorySel.value == key)
-					{
-						userIsRegistered = true;
-						break;
-					}
-
-					userIsRegistered = false;
-				}
-			});
-
-			if (userIsRegistered)
-			{
-				console.log("User " + key + " is registered!");
-				firebase.database().ref('/users/' + key).on('value', function (snapshot) {
-					//filteredUsers.push
-					console.log(snapshot.val().email);
-					$('<p>').text(snapshot.val().email).appendTo($('#listOfUsersPerCategory'));
-				});
-			}
-			/*if (){
-				filteredUsers.push(reportsCategorySel.value == )
-			}
-			console.log(arr[key].email);
-			$('<p>').text(arr[key].email).appendTo($('#listOfUsersPerCategory'));*/
-    	}
-    });
-}
-
-fireBoards.prototype.openMaterial = function () {
-	console.log(currentSelectedCourse);
-	firebase.database().ref('/fireCourses/' + currentSelectedCourse).on('value', function(snapshot) {
-		console.log(snapshot.val());
-		window.open(snapshot.val().courseURL);
-	});
-}
-
-fireBoards.prototype.tagCompleted = function () {
-
-}
-
-fireBoards.prototype.cancelRegistration = function () {
-	console.log(currentSelectedCourse);
-	
-	var coursesRef = firebase.database().ref();
-	var deletes = {};
-
-    deletes['/userCourses/' + this.auth.currentUser.uid + '/' + currentSelectedCourse] = null;
-
-    var delCourse = coursesRef.update(deletes).then(e => {
-        alert("You have cancelled your registration");
-        this.myFBShow();
-      });
-
-    
-
-    console.log("User cancelled registration");
 }
 
 function showCourseComments(courseId) {
@@ -1332,7 +1222,116 @@ function getMyRating(courseId) {
 
 	});
 	console.log("Rating for " + courseId + "successfully retrieved.");
->>>>>>> d68b2c01e109eef644b9b1a38ba9be60979b32d6
+}
+
+fireBoards.prototype.reportListCategories = function () {
+	
+	this.database.ref('/fireCourses/').on('value', function (snapshot) {
+		var arr = snapshot.val();
+		var arr2 = Object.keys(arr);
+		var key = arr2[0];
+		
+		$('#reportsCategorySel').empty();
+		$('#reportsCategorySel').append($('<option selected value="">---Select Category---</option>'));
+		for (var key in snapshot.val())
+		{
+			$('#reportsCategorySel').append($('<option value="' + key + '">' + arr[key].courseName + '</option>'));
+		}
+	});
+}
+
+fireBoards.prototype.reportGetCourse = function () {
+	console.log("Report Get Course: " + reportsCategorySel.value);
+	var filteredUsers = [];
+
+	firebase.database().ref('/fireCourses/').on('value', function (snapshot) {
+		var arr = snapshot.val();
+		var arr2 = Object.keys(arr);
+		var key = arr2[0];
+
+		for (var key in snapshot.val())
+		{
+			if (reportsCategorySel.value == key)
+			{
+				$('#reportCourseHeader').text(arr[key].courseName);
+			}
+		}
+	});
+
+	firebase.database().ref('/userCourses/').on('value', function (snapshot) {
+		var arr = snapshot.val();
+		var arr2 = Object.keys(arr);
+		var key = arr2[0];
+
+		$('#listOfUsersPerCategory').empty();
+
+		for (var key in snapshot.val())
+		{
+			console.log(key);
+
+			firebase.database().ref('/userCourses/' + key).on('value', function (snapshot) {
+				var arr = snapshot.val();
+				var arr2 = Object.keys(arr);
+				var key = arr2[0];
+
+				for (var key in snapshot.val())
+				{
+					if (reportsCategorySel.value == key)
+					{
+						userIsRegistered = true;
+						break;
+					}
+
+					userIsRegistered = false;
+				}
+			});
+
+			if (userIsRegistered)
+			{
+				console.log("User " + key + " is registered!");
+				firebase.database().ref('/users/' + key).on('value', function (snapshot) {
+					//filteredUsers.push
+					console.log(snapshot.val().email);
+					$('<p>').text(snapshot.val().email).appendTo($('#listOfUsersPerCategory'));
+				});
+			}
+			/*if (){
+				filteredUsers.push(reportsCategorySel.value == )
+			}
+			console.log(arr[key].email);
+			$('<p>').text(arr[key].email).appendTo($('#listOfUsersPerCategory'));*/
+    	}
+    });
+}
+
+fireBoards.prototype.openMaterial = function () {
+	console.log(currentSelectedCourse);
+	firebase.database().ref('/fireCourses/' + currentSelectedCourse).on('value', function(snapshot) {
+		console.log(snapshot.val());
+		window.open(snapshot.val().courseURL);
+	});
+}
+
+fireBoards.prototype.tagCompleted = function () {
+
+}
+
+fireBoards.prototype.cancelRegistration = function () {
+	console.log(currentSelectedCourse);
+	
+	var coursesRef = firebase.database().ref();
+	var deletes = {};
+
+    deletes['/userCourses/' + this.auth.currentUser.uid + '/' + currentSelectedCourse] = null;
+
+    var delCourse = coursesRef.update(deletes).then(e => {
+        alert("You have cancelled your registration");
+        this.myFBShow();
+      });
+
+    
+
+    console.log("User cancelled registration");
 }
 
 function deleteCourse (courseId, courseName, category) {
