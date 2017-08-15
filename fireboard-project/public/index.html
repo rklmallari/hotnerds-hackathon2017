@@ -37,14 +37,14 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav pull-right mainNav">
-					<li id="home"><a href="#">Home</a></li>
-          <li id="about"><a href="#">About</a></li>
-          <li id="announcements"><a href="#">Announcements</a></li>
-          <li id="courses" class="hide"><a href="#">Fireboards</a></li>
-          <li id="myFireboards" class="hide"><a href="#">My FireCourses</a></li>
-          <li id="manageFireboards" class="hide"><a href="#">Manage Fireboards</a></li>
-          <li id="reports" class="hide"><a href="#">Reports</a></li>
-          <li id="myProfile" class="hide"><a href="#">My Profile</a></li>
+					<li id="home"><a href="#home">Home</a></li>
+          <li id="about"><a href="#about">About</a></li>
+          <li id="announcements"><a href="#announcements">Announcements</a></li>
+          <li id="courses" class="hide"><a href="#fireboards">Fireboards</a></li>
+          <li id="myFireboards" class="hide"><a href="#myfirecourses">My FireCourses</a></li>
+          <li id="manageFireboards" class="hide"><a href="#managefireboards">Manage Fireboards</a></li>
+          <li id="reports" class="hide"><a href="#reports">Reports</a></li>
+          <li id="myProfile" class="hide"><a href="#myprofile">My Profile</a></li>
 					<!-- <li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
 						<ul class="dropdown-menu">
@@ -536,15 +536,16 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     Email: <input style="display:inline;" type="text" id="userEmailField" name="userEmailField" class="adminFields" disabled />
                     Admin?: <input style="display:inline;" type="text" id="adminFlagField" name="adminFlagField" class="adminFields" disabled />
                     Brief Bio: <textarea class="adminFields" id="bioTextArea" rows="8" cols="50" placeholder="Your bio..."></textarea>
-                    <input type="button" value="Update Profile" id="updProfButton" style="background-color:grey; color:black">
+                    <input type="button" value="Update Profile" id="updProfButton" class="adminButton">
                 </p>
             </section>
             <!-- /main -->
 
             <!-- Sidebar -->
-            <aside class="col-sm-4 sidebar sidebar-right">
-
-                <img id="userPic" style="width:400px; height:auto" />
+            <aside class="col-sm-4 sidebar sidebar-right" style="text-align:center">
+                <br><br>
+                <img id="userPic" style="width:300px; height:auto" />
+                <br><br><p id="profileBio"></p>
 
             </aside>
             <!-- /Sidebar -->
@@ -567,17 +568,35 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     <section class="container">
         <div class="row">
             <!-- main content -->
+            <section id="announcementAdminSection" class="col-sm-8 maincontent">
+                <h3>Add New Announcement</h3>
+                <p>
+                  <form id="announcementForm">
+                    Title<span style="color:red">*</span>: <input style="display:inline;" type="text" id="announcementTitle" name="announcementTitle" class="adminFields" placeholder="Announcement title goes here..." />
+                    Details<span style="color:red">*</span>: <textarea class="adminFields" id="announcementDetails" rows="5" cols="30" placeholder="Announcement details go here..."></textarea>
+                    <input type="button" value="Post Announcement" id="postAnnouncement" class="adminButton">
+                  </form>
+                </p>
+            </section>
+
             <section class="col-sm-8 maincontent">
                 <h3>Recent Posts</h3>
                 <p>
-                    Post 1<br>
-                    <i>Posted by: Test</i></br>
-                    <i>Posted on: August 3, 2017</i>
+                  <ul id="announcementList" style="list-style: none; text-align: left"></ul>
                 </p>
             </section>
-            <!-- /main -->
 
+
+            <aside class="col-sm-4 sidebar sidebar-right">
+
+                <div class="panel">
+                <br>
+                <img src="assets/images/announcement.png" style="width:280px; height:auto" style="text-align:center" />
+                </div>
+
+            </aside>
         </div>
+            <!-- /main -->
     </section>
   </div>
 
@@ -741,26 +760,27 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             <section class="col-sm-8 maincontent">
                 <h3>Add New Course</h3>
                 <p>
-                  <form id="uploadForm">Course Name/Title: <input style="display:inline;" type="text" id="courseNameField" name="courseNameField" class="adminFields" placeholder="Course Name/Title"/>
-                  Course Description: <input style="display:inline;" type="text" id="courseDescField" name="courseDescField" class="adminFields" placeholder="Course Description"/>
-                  Course Category: <select id="categorySel" class="adminFields">
+                  <form id="uploadForm">Course Name/Title:<span style="color:red">*</span> <input style="display:inline;" type="text" id="courseNameField" name="courseNameField" class="adminFields" placeholder="Course Name/Title"/>
+                  Course Description:<span style="color:red">*</span> <input style="display:inline;" type="text" id="courseDescField" name="courseDescField" class="adminFields" placeholder="Course Description"/>
+                  Course Category:<span style="color:red">*</span> <select id="categorySel" class="adminFields">
                     <option selected value="">---Select Category---</option>
                     <option value="general_knowledge">General Knowledge</option>
                     <option value="product_learning">Product Learning</option>
                     <option value="tools_training">Tools Training</option>
                     <option value="process_training">Process Training</option>
                   </select>
-                  Type: <select id="courseTypeSel" class="adminFields">
+                  Type:<span style="color:red">*</span> <select id="courseTypeSel" class="adminFields">
                     <option selected value="">---Select Type---</option>
                     <option value="File">File (upload)</option>
                     <option value="Video">Video (URL only)</option>
                   </select>
-                  <div id="courseURLVideo" hidden>Course URL: <input style="display:inline;" type="text" id="courseVidURL" name="courseVidURL" class="adminFields" placeholder="Video URL here..."/>
-                  <input type="button" value="Add Course" id="addCourse" style="background-color:grey; color:black" hidden></div>
+                  <div id="courseURLVideo" hidden>Course URL:<span style="color:red">*</span> <input style="display:inline;" type="text" id="courseVidURL" name="courseVidURL" class="adminFields" placeholder="Video URL here..."/>
+                  <input type="button" value="Add Course" id="addCourse" class="adminButton" hidden></div>
                   <div id="courseURLFile" hidden>
-                  Upload File: <input type="file" class="form-control" id="uploadBox" /><progress value="0" max="100" id="uploader" hidden>0%</progress></form>
+                  Upload File:<span style="color:red">*</span> <input type="file" class="form-control" id="uploadBox" /><progress value="0" max="100" id="uploader" hidden>0%</progress></form>
                   <br><i>Note: Only accepts .pdf, .doc/.docx, .ppt/.pptx, .xls/.xlsx and .txt files only. Upload will start after selecting a file.</i></div>
-                </p>
+                </p><br><br>
+                <ul id="courseList" style="list-style: none; text-align: left"></ul>
             </section>
             <!-- /main -->
 
