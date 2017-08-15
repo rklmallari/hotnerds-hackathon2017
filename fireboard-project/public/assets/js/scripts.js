@@ -477,7 +477,7 @@ fireBoards.prototype.profileShow = function() {
 		var userRef = this.database.ref('users/' + this.auth.currentUser.uid).on('value', function(snapshot) {
 			bioTextArea.value = snapshot.child("bio").val();
 			adminFlagField.setAttribute('value', snapshot.child("adminFlag").val() ? 'Yes' : 'No');
-			profileBio.innerHTML = '<i>"' + snapshot.child("bio").val() + '"</i>';
+			profileBio.innerHTML = '<i><span class="fa fa-quote-left" />&nbsp;&nbsp;' + snapshot.child("bio").val() + '&nbsp;&nbsp;<span class="fa fa-quote-right" /></i>';
 		});
 
 }
@@ -956,7 +956,7 @@ fireBoards.prototype.searchProfile = function () {
 	    } else {
 	      for(var key in objects){
 	        $('#searchProfileList').append($('<li/>',{
-	          html: '<br><img src="' + objects[key].photoUrl + '" style="width:200px;height:auto"><br>' + objects[key].userName + '<br>' + objects[key].email + '<br> <i>"'+ objects[key].bio + '"</i>'
+	          html: '<br><img src="' + objects[key].photoUrl + '" style="width:200px;height:auto"><br>' + objects[key].userName + '<br>' + objects[key].email + '<br> <i><span class="fa fa-quote-left" />&nbsp;&nbsp;'+ objects[key].bio + '&nbsp;&nbsp;<span class="fa fa-quote-right" /></i>'
 	        }));
 	      }
 	    }
@@ -1051,7 +1051,7 @@ function showCourseComments(courseId) {
 	      for(var key in objects){
 	      	var date = new Date(objects[key].commentDateTime);
 	        $('#commentsList').append($('<li/>',{
-	          html: '<i><br><span class="fa fa-quote-left" style="size:5pt" />&nbsp;&nbsp;' + objects[key].comment + '&nbsp;&nbsp;<span class="fa fa-quote-right" style="size:5pt" /><br>' + objects[key].userName + '<br>'+ formatDate(date) + '</i>'
+	          html: '<i><br><span class="fa fa-quote-left" />&nbsp;&nbsp;' + objects[key].comment + '&nbsp;&nbsp;<span class="fa fa-quote-right" /><br>' + objects[key].userName + '<br>'+ formatDate(date) + '</i>'
 	        }));
 	      }
 	    }
