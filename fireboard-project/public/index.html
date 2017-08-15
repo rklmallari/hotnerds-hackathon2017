@@ -672,26 +672,27 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             <section class="col-sm-8 maincontent">
                 <h3>Add New Course</h3>
                 <p>
-                  <form id="uploadForm">Course Name/Title: <input style="display:inline;" type="text" id="courseNameField" name="courseNameField" class="adminFields" placeholder="Course Name/Title"/>
-                  Course Description: <input style="display:inline;" type="text" id="courseDescField" name="courseDescField" class="adminFields" placeholder="Course Description"/>
-                  Course Category: <select id="categorySel" class="adminFields">
+                  <form id="uploadForm">Course Name/Title:<span style="color:red">*</span> <input style="display:inline;" type="text" id="courseNameField" name="courseNameField" class="adminFields" placeholder="Course Name/Title"/>
+                  Course Description:<span style="color:red">*</span> <input style="display:inline;" type="text" id="courseDescField" name="courseDescField" class="adminFields" placeholder="Course Description"/>
+                  Course Category:<span style="color:red">*</span> <select id="categorySel" class="adminFields">
                     <option selected value="">---Select Category---</option>
                     <option value="general_knowledge">General Knowledge</option>
                     <option value="product_learning">Product Learning</option>
                     <option value="tools_training">Tools Training</option>
                     <option value="process_training">Process Training</option>
                   </select>
-                  Type: <select id="courseTypeSel" class="adminFields">
+                  Type:<span style="color:red">*</span> <select id="courseTypeSel" class="adminFields">
                     <option selected value="">---Select Type---</option>
                     <option value="File">File (upload)</option>
                     <option value="Video">Video (URL only)</option>
                   </select>
-                  <div id="courseURLVideo" hidden>Course URL: <input style="display:inline;" type="text" id="courseVidURL" name="courseVidURL" class="adminFields" placeholder="Video URL here..."/>
-                  <input type="button" value="Add Course" id="addCourse" style="background-color:grey; color:black" hidden></div>
+                  <div id="courseURLVideo" hidden>Course URL:<span style="color:red">*</span> <input style="display:inline;" type="text" id="courseVidURL" name="courseVidURL" class="adminFields" placeholder="Video URL here..."/>
+                  <input type="button" value="Add Course" id="addCourse" class="adminButton" hidden></div>
                   <div id="courseURLFile" hidden>
-                  Upload File: <input type="file" class="form-control" id="uploadBox" /><progress value="0" max="100" id="uploader" hidden>0%</progress></form>
+                  Upload File:<span style="color:red">*</span> <input type="file" class="form-control" id="uploadBox" /><progress value="0" max="100" id="uploader" hidden>0%</progress></form>
                   <br><i>Note: Only accepts .pdf, .doc/.docx, .ppt/.pptx, .xls/.xlsx and .txt files only. Upload will start after selecting a file.</i></div>
-                </p>
+                </p><br><br>
+                <ul id="courseList" style="list-style: none; text-align: left"></ul>
             </section>
             <!-- /main -->
 

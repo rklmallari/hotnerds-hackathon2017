@@ -334,6 +334,8 @@ fireBoards.prototype.manageShow = function() {
 	this.managePage.removeAttribute('hidden');
 		this.aboutPage.setAttribute('hidden', true);
 		this.aboutLink.removeAttribute('class');
+		this.announcementsPage.setAttribute('hidden', true);
+		this.announcementsLink.removeAttribute('class');
 		this.reportsPage.setAttribute('hidden', true);
 		this.reportsLink.removeAttribute('class');
 		this.profilePage.setAttribute('hidden', true);
@@ -344,6 +346,7 @@ fireBoards.prototype.manageShow = function() {
 		this.myFBLink.removeAttribute('class');
 		this.coursesPage.setAttribute('hidden', true);
 		this.coursesLink.removeAttribute('class');
+        this.showAddedCourses();
 }
 
 fireBoards.prototype.reportsShow = function() {
@@ -526,6 +529,7 @@ fireBoards.prototype.uploadFile = function(e) {
 		            	alert('New course added!');
             			window.uploadForm.reset();
                     	uploader.value = 0;
+            			this.showAddedCourses();
 		            });
 
   		        }
@@ -550,8 +554,30 @@ fireBoards.prototype.addVideo = function() {
             var coursesRef = firebase.database().ref('fireCourses').push(postData, snap => {
             	alert('New course added!');
             	window.uploadForm.reset();
+            	this.showAddedCourses();
             });
         }
+}
+
+fireBoards.prototype.showAddedCourses = function() {
+	var coursesRef = this.database.ref('fireCourses').on('value', function(snapshot) {
+		var objects = snapshot.val();
+	    $('#courseList').empty();
+	    if (objects === null) {
+	      $('#courseList').append($('<li/>',{
+	          html: '<p style="font-weight:700">No courses added yet.</P'
+	        }));
+	    } else {
+	      for(var key in objects){
+	      	var date = new Date(objects[key].uploadDate*1000);
+	        $('#courseList').append($('<li/>',{
+	          html: '<img src="' + objects[key].courseBannerURL + '" style="width:30px; height:auto" />&nbsp;&nbsp;<a style="color:black; font-weight:900" href="' + objects[key].courseURL + '" title="View '+ objects[key].courseName + '" target="_blank">' +
+	           objects[key].courseName + '</a><button onClick="deleteCourse(\'' + key + '\', \'' + objects[key].courseName + '\', \'' + objects[key].category + '\');" title="Delete Course" class="fa fa-remove" style="color:red; border:none; background-color:transparent" /><i><br>Course Description: "' + 
+	           objects[key].description + '"<br>Category Code: "' + objects[key].category + '"<br>Uploaded By: "' + objects[key].uploadedBy + '"<br>Upload Date: "' + date.toLocaleDateString() + '"</i><br><br><br>'
+	        }));
+	      }
+	    }
+	});
 }
 
 fireBoards.prototype.updateUser = function(user) {
@@ -692,6 +718,32 @@ fireBoards.prototype.listMyFireCourses = function () {
     	}
     });*/
 
+}
+
+function deleteCourse (courseId, courseName, category) {
+  var confirmDelete = confirm("Are you sure you want to delete this course?");
+
+  if (confirmDelete) {
+    var bookRef = firebase.database().ref();
+    var currentUserUid = firebase.auth().currentUser.uid;
+
+    var deletes = {};
+
+    deletes['/fireCourse/' + courseId] = null;
+
+    var deleteBook = bookRef.update(deletes);
+    console.log("Course deleted from database");
+
+    var courseStorageRef = firebase.storage().ref('fireboards/' + category);
+    bookStorageRef.endAt('_' + courseName).delete()
+      .then(e => {
+        alert("Course has been removed from the database and cloud storage.");
+      })
+      .catch(e => {
+        alert("Failed to remove course.");
+        console.log("Error: " + e.message);
+      });
+  }
 }
 
 window.onload = function() {
