@@ -173,6 +173,7 @@ fireBoards.prototype.onAuthStateChanged = function(user) {
   	//this.manageLink.removeAttribute('class');
   	//this.reportsLink.removeAttribute('class');
   	this.profileLink.removeAttribute('class');
+  	this.announcementsLink.removeAttribute('class');
     this.addUserInDatabase(user);
     this.showAddedCourses();
     this.showPostedAnnouncements();
@@ -387,10 +388,10 @@ fireBoards.prototype.homeShow = function() {
 	this.homePage.removeAttribute('hidden');
 		this.aboutPage.setAttribute('hidden', true);
 		this.aboutLink.removeAttribute('class');
-		this.announcementsPage.setAttribute('hidden', true);
-		this.announcementsLink.removeAttribute('class');
 
 		if(this.auth.currentUser && adminFlag == true) {
+		this.announcementsPage.setAttribute('hidden', true);
+		this.announcementsLink.removeAttribute('class');
 			this.reportsPage.setAttribute('hidden', true);
 			this.reportsLink.removeAttribute('class');
 			this.profilePage.setAttribute('hidden', true);
@@ -403,6 +404,8 @@ fireBoards.prototype.homeShow = function() {
 			this.fireboardsLink.removeAttribute('class');
 			this.selectedCoursePage.setAttribute('hidden', true);
 		} else {
+		this.announcementsPage.setAttribute('hidden', true);
+		this.announcementsLink.removeAttribute('class');
       this.profilePage.setAttribute('hidden', true);
       this.profileLink.removeAttribute('class');
       this.myFCPage.setAttribute('hidden', true);
@@ -417,10 +420,10 @@ fireBoards.prototype.aboutShow = function() {
 	this.aboutPage.removeAttribute('hidden');
 		this.homePage.setAttribute('hidden', true);
 		this.homeLink.removeAttribute('class');
-		this.announcementsPage.setAttribute('hidden', true);
-		this.announcementsLink.removeAttribute('class');
 
 		if(this.auth.currentUser && adminFlag == true) {
+		this.announcementsPage.setAttribute('hidden', true);
+		this.announcementsLink.removeAttribute('class');
 			this.reportsPage.setAttribute('hidden', true);
 			this.reportsLink.removeAttribute('class');
 			this.profilePage.setAttribute('hidden', true);
@@ -433,6 +436,8 @@ fireBoards.prototype.aboutShow = function() {
 			this.fireboardsLink.removeAttribute('class');
 			this.selectedCoursePage.setAttribute('hidden', true);
 		} else {
+		this.announcementsPage.setAttribute('hidden', true);
+		this.announcementsLink.removeAttribute('class');
       this.profilePage.setAttribute('hidden', true);
       this.profileLink.removeAttribute('class');
       this.myFCPage.setAttribute('hidden', true);
@@ -449,10 +454,10 @@ fireBoards.prototype.coursesShow = function() {
     this.homeLink.removeAttribute('class');
 		this.aboutPage.setAttribute('hidden', true);
 		this.aboutLink.removeAttribute('class');
-		this.announcementsPage.setAttribute('hidden', true);
-		this.announcementsLink.removeAttribute('class');
 
     if(this.auth.currentUser && adminFlag == true) {
+		this.announcementsPage.setAttribute('hidden', true);
+		this.announcementsLink.removeAttribute('class');
 			this.reportsPage.setAttribute('hidden', true);
 			this.reportsLink.removeAttribute('class');
 			this.profilePage.setAttribute('hidden', true);
@@ -463,6 +468,8 @@ fireBoards.prototype.coursesShow = function() {
 			this.myFCLink.removeAttribute('class');
 			this.selectedCoursePage.setAttribute('hidden', true);
     } else {
+		this.announcementsPage.setAttribute('hidden', true);
+		this.announcementsLink.removeAttribute('class');
       this.profilePage.setAttribute('hidden', true);
       this.profileLink.removeAttribute('class');
       this.myFCPage.setAttribute('hidden', true);
@@ -884,6 +891,7 @@ fireBoards.prototype.showSelectedCourse = function (elementsArray, elementID) {
 				console.log("Found Course: " + arr[key].courseName);
 
 				showCourseComments(key);
+				initiateRatingObjects(key);
 
 				fireBoards.selectedPostData = {
 					category: arr[key].category,
@@ -1049,10 +1057,17 @@ fireBoards.prototype.showPostedAnnouncements = function() {
 	    } else {
 	      for(var key in objects){
 	      	var date = new Date(objects[key].postDate);
-	        $('#announcementList').append($('<li/>',{
-	          html: '<span class="fa fa-exclamation" style="font-weight:900"></span>&nbsp;&nbsp;<b>' + objects[key].title + '</b><button onClick="deleteAnnouncement(\'' + key + '\');" title="Delete Announcement" class="fa fa-remove" style="color:red; border:none; background-color:transparent" />' + 
-	          '<br>' + objects[key].details + '<br><br><i>Posted By: ' + objects[key].postedBy + '<br>Post Date: ' + formatDate(date) + '</i><br><br><br>'
-	        }));
+	      	if(adminFlag) {
+		        $('#announcementList').append($('<li/>',{
+		          html: '<span class="fa fa-exclamation" style="font-weight:900"></span>&nbsp;&nbsp;<b>' + objects[key].title + '</b><button onClick="deleteAnnouncement(\'' + key + '\');" title="Delete Announcement" class="fa fa-remove" style="color:red; border:none; background-color:transparent" />' + 
+		          '<br>' + objects[key].details + '<br><br><i>Posted By: ' + objects[key].postedBy + '<br>Post Date: ' + formatDate(date) + '</i><br><br><br>'
+		        }));
+	      	} else {
+		        $('#announcementList').append($('<li/>',{
+		          html: '<span class="fa fa-exclamation" style="font-weight:900"></span>&nbsp;&nbsp;<b>' + objects[key].title + '</b>' + 
+		          '<br>' + objects[key].details + '<br><br><i>Posted By: ' + objects[key].postedBy + '<br>Post Date: ' + formatDate(date) + '</i><br><br><br>'
+		        }));
+	      	}
 	      }
 	    }
 	});
@@ -1165,13 +1180,14 @@ fireBoards.prototype.showMySelectedCourse = function (elementsArray, elementID) 
 		}
 
 		showCourseComments(courseId);
+		initiateRatingObjects(courseId);
 	});
 		fireBoards.selectedCoursePage.removeAttribute('hidden');
 		fireBoards.myFCPage.setAttribute('hidden', true);
 	
 }
 
-function showCourseComments(courseId) {
+function initiateRatingObjects(courseId) {
 	addComment.setAttribute('onclick', 'pushComment("' + courseId + '")');
 	star1.setAttribute('onclick', 'rateCourse("' + courseId + '", 1)');
 	star2.setAttribute('onclick', 'rateCourse("' + courseId + '", 2)');
@@ -1179,7 +1195,10 @@ function showCourseComments(courseId) {
 	star4.setAttribute('onclick', 'rateCourse("' + courseId + '", 4)');
 	star5.setAttribute('onclick', 'rateCourse("' + courseId + '", 5)');
 	getMyRating(courseId);
-	var commentsRef = firebase.database().ref('comments/' + courseId + '/messages').on('value', function(snapshot) {
+}
+
+function showCourseComments(courseId) {
+	var commentsRef = firebase.database().ref('comments/' + courseId + '/messages').once('value', function(snapshot) {
 		var objects = snapshot.val();
 		//console.log("Show comments");
 	    $('#commentsList').empty();
@@ -1228,7 +1247,7 @@ function rateCourse(courseId, rate) {
 	var overallRate = 0;
 	var count = 0;
 
-	var coursesRef = firebase.database().ref('courseRating/' + courseId).on('value', function(snapshot) {
+	var coursesRef = firebase.database().ref('courseRating/' + courseId).once('value', function(snapshot) {
 		console.log("DATABASE TRIGGERED: rateCourse");
 		var objects = snapshot.val();
 
@@ -1277,7 +1296,6 @@ function rateCourse(courseId, rate) {
 			});
 
 			console.log("Overall Rating updated for " + courseId);
-	 		alert("Rating of " + rate + " successful! Thanks!");
 		}
 		
 		

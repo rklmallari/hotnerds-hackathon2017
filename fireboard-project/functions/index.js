@@ -9,6 +9,7 @@ admin.initializeApp({
 
 var database = admin.database();
 
+const gcs = require('@google-cloud/storage')();
 const nodemailer = require('nodemailer');
 const gmailEmail = encodeURIComponent(functions.config().gmail.email);
 const gmailPassword = encodeURIComponent(functions.config().gmail.password);
@@ -95,30 +96,59 @@ function sendAnnouncementsEmail(email, announcementTitle, announcementDetails) {
   });
 }
 
-exports.emailCourseStatusChanges = functions.database.ref('/userCourses/{uid}/{courseId}').onWrite(event => {
-  const userCourse = event.data.val();
-  const userUid = event.params.uid;
+// exports.emailCourseStatusChanges = functions.database.ref('/userCourses/{uid}/{courseId}').onWrite(event => {
+//   const userCourse = event.data.val();
+//   const userUid = event.params.uid;
 
-  console.log("Sending an email notification for user update status...");
+//   console.log("Sending an email notification for user update status...");
 
-  var usersRef = admin.database().ref('/users');
-  return usersRef.on('value', function(snap) {
+//   var usersRef = admin.database().ref('/users');
+//   return usersRef.on('value', function(snap) {
+//     snap.forEach(function(snapshot) {
+//         sendCourseStatusUpdateEmail(s.child('email').val(), userCourse.courseName, userCourse.status, userCourse.myRating);
+//     });
+//     console.log("Email notification has been sent to user: ", userUid);
+//   });
+// });
+
+// function sendCourseStatusUpdateEmail(email, courseTitle, courseStatus, rating) {
+//   const mailOptions = {
+//     from: `${APP_NAME} <noreply@firebase.com>`,
+//     to: email
+//   };
+
+//   mailOptions.subject = `Course Status Update on ${APP_NAME}`;
+//   mailOptions.text = `${courseTitle}: ${courseStatus}. `;
+//   return mailTransport.sendMail(mailOptions).then(() => {
+//     console.log('An email for course status update was sent to:', email);
+//   });
+// }
+
+exports.emailOnUpload = functions.storage.object().onChange(event => {
+  const object = event.data;
+
+  console.log("Sending an email notification for a new file upload...");
+
+  var adminsRef = admin.database().ref('/admins');
+  return adminsRef.on('value', function(snap) {
     snap.forEach(function(snapshot) {
-        sendCourseStatusUpdateEmail(s.child('email').val(), userCourse.courseName, userCourse.status, userCourse.myRating);
+      adminsRef.child(snapshot.key).on('value', function(s) {
+        sendFileUploadEmail(s.child('email').val());
+      });
     });
-    console.log("Email notification has been sent to user: ", userUid);
+    console.log("Email notifications have been sent to all users.");
   });
 });
 
-function sendCourseStatusUpdateEmail(email, courseTitle, courseStatus, rating) {
+function sendFileUploadEmail(email) {
   const mailOptions = {
     from: `${APP_NAME} <noreply@firebase.com>`,
     to: email
   };
 
-  mailOptions.subject = `Course Status Update on ${APP_NAME}`;
-  mailOptions.text = `${courseTitle}: ${courseStatus}. `;
+  mailOptions.subject = `New File Upload to ${APP_NAME}`;
+  mailOptions.text = `A new file was uploaded for a new course.`;
   return mailTransport.sendMail(mailOptions).then(() => {
-    console.log('An email for course status update was sent to:', email);
+    console.log('An email for the file upload was sent to:', email);
   });
 }
