@@ -1377,6 +1377,7 @@ fireBoards.prototype.reportGetCourse = function () {
 		var arr = snapshot.val();
 		var arr2 = Object.keys(arr);
 		var key = arr2[0];
+		var withUsers = false;
 
 		$('#listOfUsersPerCategory').empty();
 
@@ -1409,12 +1410,17 @@ fireBoards.prototype.reportGetCourse = function () {
 					console.log(snapshot.val().email);
 					$('<p>').text(snapshot.val().email).appendTo($('#listOfUsersPerCategory'));
 				});
+				withUsers = true;
 			}
 			/*if (){
 				filteredUsers.push(reportsCategorySel.value == )
 			}
 			console.log(arr[key].email);
 			$('<p>').text(arr[key].email).appendTo($('#listOfUsersPerCategory'));*/
+    	}
+
+    	if(!withUsers) {
+    		$('<p>').text("No registered users for this course yet.").appendTo($('#listOfUsersPerCategory'));
     	}
     });
 }
