@@ -1198,7 +1198,7 @@ function initiateRatingObjects(courseId) {
 }
 
 function showCourseComments(courseId) {
-	var commentsRef = firebase.database().ref('comments/' + courseId + '/messages').once('value', function(snapshot) {
+	var commentsRef = firebase.database().ref('comments/' + courseId + '/messages').on('value', function(snapshot) {
 		var objects = snapshot.val();
 		//console.log("Show comments");
 	    $('#commentsList').empty();
