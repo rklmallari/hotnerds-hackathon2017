@@ -263,6 +263,8 @@ color: #fff !important;
     border-radius: 0px;
     background: #3D3D3D;
 }
+
+
 .heading-text{
     position: absolute;
     z-index: 999;
@@ -1178,6 +1180,8 @@ fieldset, label { margin: 0; padding: 0; }
   color: #ddd; 
  float: right; 
 }
+
+.img { image-orientation: from-image; }
 
 /***** CSS Magic to Highlight Stars on Hover *****/
 

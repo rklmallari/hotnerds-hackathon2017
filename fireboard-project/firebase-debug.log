@@ -34,3 +34,39 @@
 [info] i  hosting: Serving hosting files from: public
 [info] ✔  hosting: Local server: http://localhost:5000
 
+[debug] [2017-08-16T04:28:00.451Z] ----------------------------------------------------------------------
+[debug] [2017-08-16T04:28:00.454Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve
+[debug] [2017-08-16T04:28:00.454Z] CLI Version:   3.9.2
+[debug] [2017-08-16T04:28:00.454Z] Platform:      darwin
+[debug] [2017-08-16T04:28:00.454Z] Node Version:  v6.11.2
+[debug] [2017-08-16T04:28:00.455Z] Time:          Wed Aug 16 2017 12:28:00 GMT+0800 (+08)
+[debug] [2017-08-16T04:28:00.455Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2017-08-16T04:28:00.472Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-08-16T04:28:00.473Z] > authorizing via signed-in user
+[debug] [2017-08-16T04:28:00.475Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2017-08-16T04:28:00.475Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token { refresh_token: '1/t4wFB5NUjqzOj7V7R-rx795bV2OmkX5xAFKnp-bEBMP9mVz-KXCDOUMfD9R-QWDb',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Wed Aug 16 2017 12:28:00 GMT+0800 (+08)
+[debug] [2017-08-16T04:28:00.886Z] <<< HTTP RESPONSE 200
+[debug] [2017-08-16T04:28:00.902Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/fireboard-hackathon2017  
+ Wed Aug 16 2017 12:28:00 GMT+0800 (+08)
+[debug] [2017-08-16T04:28:02.867Z] <<< HTTP RESPONSE 200
+[debug] [2017-08-16T04:28:02.868Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/fireboard-hackathon2017/tokens  
+ Wed Aug 16 2017 12:28:02 GMT+0800 (+08)
+[debug] [2017-08-16T04:28:03.963Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/tibias/Documents/hotnerds-hackathon2017/fireboard-project'...
+[info] 
+[debug] [2017-08-16T04:28:03.968Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/fireboard-hackathon2017  
+ Wed Aug 16 2017 12:28:03 GMT+0800 (+08)
+[debug] [2017-08-16T04:28:05.440Z] <<< HTTP RESPONSE 200
+[debug] [2017-08-16T04:28:05.441Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/741989479700/clients/_:getWebAppConfig  
+ Wed Aug 16 2017 12:28:05 GMT+0800 (+08)
+[debug] [2017-08-16T04:28:06.360Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: public
+[info] ✔  hosting: Local server: http://localhost:5000
+
